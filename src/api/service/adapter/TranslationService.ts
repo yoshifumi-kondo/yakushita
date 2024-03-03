@@ -46,6 +46,6 @@ export class TranslationServiceImpl implements ITranslationService {
     - Original text: ${originalText}
 
     Note: This process is intended for use in an automated application. Therefore, please return only the translated text.
-    `;
+    `.trim();
   }
 }
