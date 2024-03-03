@@ -19,7 +19,9 @@ export class OpenAiService {
 
     const answer = completion.choices[0].message.content;
 
-    if (!answer) throw new Error("Translation failed");
+    if (!answer) {
+      throw new Error(`Translation failed for text prompt: ${textPrompt}`);
+    }
 
     return answer;
   }
