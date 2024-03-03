@@ -2,8 +2,7 @@ import OpenAI from "openai";
 
 export class OpenAiService {
   private openai: OpenAI;
-  constructor() {
-    const apiKey = process.env.OPENAI_API_KEY;
+  constructor(apiKey: string) {
     if (!apiKey) {
       throw new Error("OPENAI_API_KEY is not set");
     }
