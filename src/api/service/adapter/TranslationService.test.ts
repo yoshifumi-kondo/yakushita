@@ -6,9 +6,12 @@ import { OpenAiService } from "@/api/service/openai/OpenAiService";
 
 describe("TranslationServiceImpl", () => {
   it("should translate text correctly", async () => {
-    const mockOpenAiService = {
-      askGptV3_5Turbo: jest.fn().mockResolvedValue("Translated text"),
-    } as unknown as OpenAiService;
+    const mockOpenAiService = jest.createMockFromModule<OpenAiService>(
+      "@/api/service/openai/OpenAiService"
+    );
+    mockOpenAiService.askGptV3_5Turbo = jest
+      .fn()
+      .mockResolvedValue("Translated text");
     const service = new TranslationServiceImpl(mockOpenAiService);
     const originalText = new OriginalText("Test text");
     const config = new TranslationConfig(
