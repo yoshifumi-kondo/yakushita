@@ -8,11 +8,13 @@ import { OpenAiService } from "@/api/service/openai/OpenAiService";
 export class TranslationServiceImpl implements ITranslationService {
   constructor(private openAiService: OpenAiService) {}
   async translate(originalText: OriginalText, config: TranslationConfig) {
-    return new TranslationResult(
-      originalText,
-      await this.generatePrompt(originalText, config),
-      config
-    );
+    try {
+      const translatedText = await this.generatePrompt(originalText, config);
+      return new TranslationResult(originalText, translatedText, config);
+    } catch (error) {
+      console.error("Translation failed", error);
+      throw error;
+    }
   }
 
   private async generatePrompt(
