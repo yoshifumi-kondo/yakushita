@@ -10,13 +10,19 @@ export class OriginalText {
     this.validate();
   }
   private validate() {
-    if (this._text.length > OriginalText._TEXT_MAX_LENGTH) {
-      throw new Error(
-        `Text should be less than ${OriginalText._TEXT_MAX_LENGTH} characters`
-      );
+    if (this.isEmpty()) {
+      throw new Error("Original text is empty");
+    }
+    if (this.overMaxTextLength()) {
+      throw new Error("Original text is too long");
     }
   }
-
+  private overMaxTextLength() {
+    return this._text.length > OriginalText._TEXT_MAX_LENGTH;
+  }
+  private isEmpty() {
+    return !this._text || this._text.trim().length === 0;
+  }
   toJSON() {
     return this._text;
   }
