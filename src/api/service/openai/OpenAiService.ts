@@ -4,9 +4,11 @@ export class OpenAiService {
   private openai: OpenAI;
 
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("OPENAI_API_KEY is not set");
+    }
+    this.openai = new OpenAI({ apiKey });
   }
 
   public async askGptV3_5Turbo(textPrompt: string): Promise<string> {
