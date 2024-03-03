@@ -20,19 +20,30 @@ export class TranslationServiceImpl implements ITranslationService {
     config: TranslationConfig
   ) {
     const { to, from } = config.toJSON();
-    const prompt = `
-Please perform the translation based on the following information, and output only the translated text.
-
-- Source language: ${from}
-- Target language: ${to}
-- Original text: ${originalText.toJSON()}
-
-Note: This process is intended for use in an automated application. Therefore, please return only the translated text.
-    `;
+    const prompt = this.generateTranslationPrompt(
+      from,
+      to,
+      originalText.toJSON()
+    );
     const rowTranslatedText = await this.openAiService.askGptV3_5Turbo(prompt);
     if (!rowTranslatedText) {
       throw new Error("Translation failed");
     }
     return new TranslatedText(rowTranslatedText);
+  }
+  private generateTranslationPrompt(
+    from: string,
+    to: string,
+    originalText: string
+  ) {
+    return `
+    Please perform the translation based on the following information, and output only the translated text.
+
+    - Source language: ${from}
+    - Target language: ${to}
+    - Original text: ${originalText}
+
+    Note: This process is intended for use in an automated application. Therefore, please return only the translated text.
+    `;
   }
 }
