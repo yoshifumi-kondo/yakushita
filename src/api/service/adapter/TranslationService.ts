@@ -6,7 +6,7 @@ import { TranslationResult } from "@/api/lib/domain/translator/TranslationResult
 import { OpenAiService } from "@/api/service/openai/OpenAiService";
 
 export class TranslationServiceImpl implements ITranslationService {
-  private openAiService = new OpenAiService();
+  constructor(private openAiService: OpenAiService) {}
   async translate(originalText: OriginalText, config: TranslationConfig) {
     return new TranslationResult(
       originalText,
