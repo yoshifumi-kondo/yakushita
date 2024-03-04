@@ -3,7 +3,7 @@ import { UserId } from "@/api/lib/domain/user/UserId";
 import { GoogleAuth } from "@/api/lib/domain/user/auth/GoogleAuth";
 import { UserAuth } from "@/api/lib/domain/user/auth/UserAuth";
 import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/schema";
-import { IUserRepository } from "@/api/lib/repository/i.user.repository";
+import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import mongoose from "mongoose";
 
 export class UserRepository implements IUserRepository {
