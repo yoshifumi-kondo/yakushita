@@ -1,0 +1,13 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    "node_modules",
+    "**/dist/**",
+    ".git",
+    "**/*.min.*",
+    "**/build/**"
+  ],
+  "words": ["mongoose", "nextjs", "tailwindcss", "openai"],
+  "flagWords": []
+}
