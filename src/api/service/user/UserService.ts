@@ -1,6 +1,4 @@
-import { User } from "@/api/lib/domain/user/User";
-import { UserId } from "@/api/lib/domain/user/UserId";
-import { UserAuth } from "@/api/lib/domain/user/auth/UserAuth";
+import { UserAuth, User, UserId } from "@/api/lib/domain";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import { IUserService } from "@/api/service/user/IUserService";
 

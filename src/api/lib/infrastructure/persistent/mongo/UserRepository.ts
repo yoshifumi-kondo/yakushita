@@ -1,7 +1,4 @@
-import { User } from "@/api/lib/domain/user/User";
-import { UserId } from "@/api/lib/domain/user/UserId";
-import { GoogleAuth } from "@/api/lib/domain/user/auth/GoogleAuth";
-import { UserAuth } from "@/api/lib/domain/user/auth/UserAuth";
+import { UserId, GoogleAuth, User, UserAuth } from "@/api/lib/domain";
 import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/schema";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import mongoose from "mongoose";

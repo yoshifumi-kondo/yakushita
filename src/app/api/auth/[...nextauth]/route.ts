@@ -1,9 +1,7 @@
 import NextAuth from "next-auth";
-import { GoogleAuth } from "@/api/lib/domain/user/auth/GoogleAuth";
-import { UserAuth } from "@/api/lib/domain/user/auth/UserAuth";
-import { SignUpUsecase } from "@/api/usecase/auth/SignUpUsecase";
 import GoogleProvider from "next-auth/providers/google";
 import { SignInOrSignUpUsecase } from "@/api/usecase/auth/SingInOrSignUpUsecase";
+import { UserAuth, GoogleAuth } from "@/api/lib/domain";
 
 const handler = NextAuth({
   providers: [

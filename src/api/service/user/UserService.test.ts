@@ -1,8 +1,6 @@
+import { UserAuth, GoogleAuth, User, UserId } from "@/api/lib/domain";
 import { UserService } from "./UserService";
-import { User } from "@/api/lib/domain/user/User";
-import { UserId } from "@/api/lib/domain/user/UserId";
-import { GoogleAuth } from "@/api/lib/domain/user/auth/GoogleAuth";
-import { UserAuth } from "@/api/lib/domain/user/auth/UserAuth";
+
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 
 describe("UserService", () => {

@@ -1,6 +1,4 @@
-import { GoogleAuth } from "@/api/lib/domain/user/auth/GoogleAuth";
-import { UserAuth } from "@/api/lib/domain/user/auth/UserAuth";
-import { UserId } from "@/api/lib/domain/user/UserId";
+import { UserId, UserAuth } from "@/api/lib/domain";
 
 const symbol = Symbol("User");
 

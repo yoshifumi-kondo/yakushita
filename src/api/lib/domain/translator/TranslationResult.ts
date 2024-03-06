@@ -1,6 +1,8 @@
-import { OriginalText } from "@/api/lib/domain/translator/OriginalText";
-import { TranslatedText } from "@/api/lib/domain/translator/TranslatedText";
-import { TranslationConfig } from "@/api/lib/domain/translator/TranslationConfig";
+import {
+  OriginalText,
+  TranslatedText,
+  TranslationConfig,
+} from "@/api/lib/domain";
 
 const symbol = Symbol("TranslationResult");
 

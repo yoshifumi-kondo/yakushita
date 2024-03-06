@@ -1,6 +1,8 @@
-import { OriginalText } from "@/api/lib/domain/translator/OriginalText";
-import { TranslationConfig } from "@/api/lib/domain/translator/TranslationConfig";
-import { TranslationResult } from "@/api/lib/domain/translator/TranslationResult";
+import {
+  OriginalText,
+  TranslationConfig,
+  TranslationResult,
+} from "@/api/lib/domain";
 
 export abstract class ITranslationService {
   abstract translate(
