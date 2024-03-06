@@ -4,6 +4,7 @@ import { UserId } from "@/api/lib/domain/user/UserId";
 
 export abstract class IUserRepository {
   abstract createUser(user: User): Promise<void>;
-  abstract getUser(auth: UserAuth): Promise<User>;
+  abstract getUserById(userId: UserId): Promise<User | null>;
+  abstract getUserByAuth(auth: UserAuth): Promise<User | null>;
   abstract deleteUser(id: UserId): Promise<void>;
 }
