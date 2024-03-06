@@ -14,9 +14,13 @@ export class User {
     this.auth = auth;
   }
 
+  public static create(auth: UserAuth): User {
+    return new User(UserId.create(), auth);
+  }
+
   toJSON() {
     return {
-      userId: this.userId.toJSON(),
+      id: this.userId.toJSON(),
       auth: this.auth.toJSON(),
     };
   }

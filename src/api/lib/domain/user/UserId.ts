@@ -10,8 +10,8 @@ export class UserId {
     this._id = id;
   }
 
-  create() {
-    new UserId(generateId());
+  public static create() {
+    return new UserId(generateId());
   }
 
   toJSON() {
