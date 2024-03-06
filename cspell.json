@@ -8,6 +8,6 @@
     "**/*.min.*",
     "**/build/**"
   ],
-  "words": ["mongoose", "nextjs", "tailwindcss", "openai"],
+  "words": ["mongoose", "nextjs", "openai", "tailwindcss", "Usecase"],
   "flagWords": []
 }
