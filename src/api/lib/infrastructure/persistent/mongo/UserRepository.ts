@@ -10,7 +10,8 @@ export class UserRepository implements IUserRepository {
   private readonly MongooseUserModel;
 
   constructor() {
-    this.MongooseUserModel = mongoose.model("User", UserSchema);
+    this.MongooseUserModel =
+      mongoose.models.User || mongoose.model("User", UserSchema);
   }
 
   async createUser(user: User): Promise<void> {
@@ -18,10 +19,27 @@ export class UserRepository implements IUserRepository {
     await newUser.save();
   }
 
-  async getUser(auth: UserAuth): Promise<User> {
-    const userDoc = await this.MongooseUserModel.findOne(auth.toJSON()).exec();
+  async getUserById(userId: UserId): Promise<User | null> {
+    const userDoc = await this.MongooseUserModel.findById(
+      userId.toJSON()
+    ).exec();
     if (!userDoc) {
-      throw new Error("User not found");
+      return null;
+    }
+    const { id, auth: userAuth } = userDoc;
+    const googleAuth = userAuth?.google
+      ? new GoogleAuth(userAuth.google.id)
+      : undefined;
+    return new User(new UserId(id), new UserAuth({ google: googleAuth }));
+  }
+
+  async getUserByAuth(auth: UserAuth): Promise<User | null> {
+    const { google } = auth.toJSON();
+    const userDoc = await this.MongooseUserModel.findOne({
+      "auth.google.id": google?.id,
+    }).exec();
+    if (!userDoc) {
+      return null;
     }
     const { id, auth: userAuth } = userDoc;
     const googleAuth = userAuth?.google
