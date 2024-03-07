@@ -1,3 +1,4 @@
+import { UserAlreadyExistsError, UserNotFoundError } from "@/api/error";
 import { UserAuth, User, UserId } from "@/api/lib/domain";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import { IUserService } from "@/api/service/user/IUserService";
@@ -7,7 +8,7 @@ export class UserService implements IUserService {
 
   async create(auth: UserAuth): Promise<User> {
     if (await this.isExistUser(auth)) {
-      throw new Error("User already exists");
+      throw new UserAlreadyExistsError();
     }
     const user = User.create(auth);
     await this.userRepository.createUser(user);
@@ -24,7 +25,7 @@ export class UserService implements IUserService {
 
   async deleteUser(userId: UserId): Promise<void> {
     if (!(await this.isExistUser(userId))) {
-      throw new Error("User not found");
+      throw new UserNotFoundError();
     }
     await this.userRepository.deleteUser(userId);
   }

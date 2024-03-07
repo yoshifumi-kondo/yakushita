@@ -2,6 +2,7 @@ import { UserAuth, GoogleAuth, User, UserId } from "@/api/lib/domain";
 import { UserService } from "./UserService";
 
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
+import { UserAlreadyExistsError, UserNotFoundError } from "@/api/error";
 
 describe("UserService", () => {
   const setup = () => {
@@ -36,8 +37,8 @@ describe("UserService", () => {
         .spyOn(userRepository, "getUserByAuth")
         .mockResolvedValueOnce(new User(new UserId("test"), auth));
 
-      await expect(userService.create(auth)).rejects.toThrowError(
-        "User already exists"
+      await expect(userService.create(auth)).rejects.toThrow(
+        UserAlreadyExistsError
       );
     });
   });
@@ -95,8 +96,8 @@ describe("UserService", () => {
       const userId = new UserId("test");
       jest.spyOn(userRepository, "getUserById").mockResolvedValueOnce(null);
 
-      await expect(userService.deleteUser(userId)).rejects.toThrowError(
-        "User not found"
+      await expect(userService.deleteUser(userId)).rejects.toThrow(
+        UserNotFoundError
       );
     });
   });
