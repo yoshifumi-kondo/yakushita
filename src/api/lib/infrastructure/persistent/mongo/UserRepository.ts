@@ -7,8 +7,7 @@ export class UserRepository implements IUserRepository {
   private readonly MongooseUserModel;
 
   constructor() {
-    this.MongooseUserModel =
-      mongoose.models.User || mongoose.model("User", UserSchema);
+    this.MongooseUserModel = mongoose.model("User", UserSchema);
   }
 
   async createUser(user: User): Promise<void> {
