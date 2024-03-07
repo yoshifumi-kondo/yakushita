@@ -1,4 +1,5 @@
 import { UserId, GoogleAuth, User, UserAuth } from "@/api/lib/domain";
+import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/schema";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import mongoose from "mongoose";
@@ -24,7 +25,7 @@ export class UserRepository implements IUserRepository {
     }
     const { id, auth: userAuth } = userDoc;
     const googleAuth = userAuth?.google
-      ? new GoogleAuth(userAuth.google.id)
+      ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
       : undefined;
     return new User(new UserId(id), new UserAuth({ google: googleAuth }));
   }
@@ -39,7 +40,7 @@ export class UserRepository implements IUserRepository {
     }
     const { id, auth: userAuth } = userDoc;
     const googleAuth = userAuth?.google
-      ? new GoogleAuth(userAuth.google.id)
+      ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
       : undefined;
     return new User(new UserId(id), new UserAuth({ google: googleAuth }));
   }

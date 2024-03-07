@@ -3,6 +3,7 @@ import { UserService } from "./UserService";
 
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import { UserAlreadyExistsError, UserNotFoundError } from "@/api/error";
+import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 
 describe("UserService", () => {
   const setup = () => {
@@ -19,7 +20,9 @@ describe("UserService", () => {
   describe("create", () => {
     it("should create a new user if user does not exist", async () => {
       const { userRepository, userService } = setup();
-      const auth: UserAuth = new UserAuth({ google: new GoogleAuth("test") });
+      const auth: UserAuth = new UserAuth({
+        google: new GoogleAuth(new GoogleAuthId("test")),
+      });
       jest.spyOn(userRepository, "getUserByAuth").mockResolvedValueOnce(null);
       jest.spyOn(userRepository, "createUser").mockResolvedValueOnce(undefined);
 
@@ -32,7 +35,9 @@ describe("UserService", () => {
 
     it("should throw an error if user already exists", async () => {
       const { userRepository, userService } = setup();
-      const auth: UserAuth = new UserAuth({ google: new GoogleAuth("test") });
+      const auth: UserAuth = new UserAuth({
+        google: new GoogleAuth(new GoogleAuthId("test")),
+      });
       jest
         .spyOn(userRepository, "getUserByAuth")
         .mockResolvedValueOnce(new User(new UserId("test"), auth));
@@ -49,7 +54,7 @@ describe("UserService", () => {
       const userId = new UserId("test");
       const user = new User(
         userId,
-        new UserAuth({ google: new GoogleAuth("test") })
+        new UserAuth({ google: new GoogleAuth(new GoogleAuthId("test")) })
       );
       jest.spyOn(userRepository, "getUserById").mockResolvedValueOnce(user);
 
@@ -63,7 +68,9 @@ describe("UserService", () => {
   describe("getUserByAuth", () => {
     it("should return a user by auth", async () => {
       const { userRepository, userService } = setup();
-      const auth: UserAuth = new UserAuth({ google: new GoogleAuth("test") });
+      const auth: UserAuth = new UserAuth({
+        google: new GoogleAuth(new GoogleAuthId("test")),
+      });
       const user = new User(new UserId("test"), auth);
       jest.spyOn(userRepository, "getUserByAuth").mockResolvedValueOnce(user);
 
@@ -81,7 +88,10 @@ describe("UserService", () => {
       jest
         .spyOn(userRepository, "getUserById")
         .mockResolvedValueOnce(
-          new User(userId, new UserAuth({ google: new GoogleAuth("test") }))
+          new User(
+            userId,
+            new UserAuth({ google: new GoogleAuth(new GoogleAuthId("test")) })
+          )
         );
       jest.spyOn(userRepository, "deleteUser").mockResolvedValueOnce(undefined);
 

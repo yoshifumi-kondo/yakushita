@@ -2,8 +2,10 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { SignInOrSignUpUsecase } from "@/api/usecase/auth/SingInOrSignUpUsecase";
 import { UserAuth, GoogleAuth } from "@/api/lib/domain";
+import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 
 const handler = NextAuth({
+  secret: process.env.NEXTAUTH_SECRET ?? "",
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
@@ -15,7 +17,7 @@ const handler = NextAuth({
       try {
         if (account?.provider === "google") {
           const createdUser = await SignInOrSignUpUsecase(
-            new UserAuth({ google: new GoogleAuth(user.id) })
+            new UserAuth({ google: new GoogleAuth(new GoogleAuthId(user.id)) })
           );
           if (createdUser) {
             user.userId = createdUser.toJSON().id;
