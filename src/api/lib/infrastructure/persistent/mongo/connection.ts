@@ -17,7 +17,7 @@ export class MongoDBConnection {
         console.error.bind(console, "MongoDB connection error:")
       );
       this.instance.once("open", () => {
-        console.log("MongoDB connection successful");
+        console.info("MongoDB connection successful");
       });
     }
   }
