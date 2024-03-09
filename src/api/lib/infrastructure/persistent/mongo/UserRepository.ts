@@ -1,3 +1,4 @@
+import { DatabaseError } from "@/api/error";
 import { UserId, GoogleAuth, User, UserAuth } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/schema";
@@ -18,7 +19,7 @@ export class UserRepository implements IUserRepository {
       await newUser.save();
     } catch (error) {
       console.error("Error creating user:", error);
-      throw new Error("Failed to create user");
+      throw new DatabaseError("Failed to create user");
     }
   }
 
@@ -37,7 +38,7 @@ export class UserRepository implements IUserRepository {
       return new User(new UserId(id), new UserAuth({ google: googleAuth }));
     } catch (error) {
       console.error("Error getting user by ID:", error);
-      throw new Error("Failed to get user by ID");
+      throw new DatabaseError("Failed to get user by ID");
     }
   }
 
@@ -57,7 +58,7 @@ export class UserRepository implements IUserRepository {
       return new User(new UserId(id), new UserAuth({ google: googleAuth }));
     } catch (error) {
       console.error("Error getting user by auth:", error);
-      throw new Error("Failed to get user by auth");
+      throw new DatabaseError("Failed to get user by auth");
     }
   }
 
@@ -66,7 +67,7 @@ export class UserRepository implements IUserRepository {
       await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
     } catch (error) {
       console.error("Error deleting user:", error);
-      throw new Error("Failed to delete user");
+      throw new DatabaseError("Failed to delete user");
     }
   }
 }
