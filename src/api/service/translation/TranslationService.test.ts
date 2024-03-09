@@ -10,7 +10,7 @@ import {
 describe("TranslationServiceImpl", () => {
   it("should translate text correctly", async () => {
     const mockOpenAiService = jest.createMockFromModule<OpenAiService>(
-      "@/api/service/openai/OpenAiService"
+      "@/api/lib/infrastructure/adapter/openai/OpenAiService.ts"
     );
     mockOpenAiService.askGptV3_5Turbo = jest
       .fn()
