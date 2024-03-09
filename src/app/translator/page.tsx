@@ -1,4 +1,4 @@
-import { TextTranslator } from "@/components/translator/TextTranslator";
+import { TextTranslator } from "@/component/translator/TextTranslator";
 
 export default function Translator() {
   return (
