@@ -1,4 +1,4 @@
-import { Language } from "@/api/lib/domain/translator/Language";
+import { Language } from "@/api/lib/domain";
 
 const symbol = Symbol("TranslationConfig");
 

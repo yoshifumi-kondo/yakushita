@@ -1,9 +1,12 @@
 import { ITranslationService } from "@/api/service/translation/ITranslationService";
-import { OriginalText } from "@/api/lib/domain/translator/OriginalText";
-import { TranslatedText } from "@/api/lib/domain/translator/TranslatedText";
-import { TranslationConfig } from "@/api/lib/domain/translator/TranslationConfig";
-import { TranslationResult } from "@/api/lib/domain/translator/TranslationResult";
+
 import { OpenAiService } from "@/api/lib/infrastructure/adapter/openai/OpenAiService";
+import {
+  OriginalText,
+  TranslationConfig,
+  TranslationResult,
+  TranslatedText,
+} from "@/api/lib/domain";
 
 export class TranslationServiceImpl implements ITranslationService {
   constructor(private openAiService: OpenAiService) {}

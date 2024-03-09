@@ -1,8 +1,11 @@
-import { Language, LanguagesType } from "@/api/lib/domain/translator/Language";
-import { OriginalText } from "@/api/lib/domain/translator/OriginalText";
-import { TranslationConfig } from "@/api/lib/domain/translator/TranslationConfig";
 import { TranslationServiceImpl } from "@/api/service/translation/TranslationService";
 import { OpenAiService } from "@/api/lib/infrastructure/adapter/openai/OpenAiService";
+import {
+  OriginalText,
+  TranslationConfig,
+  Language,
+  LanguagesType,
+} from "@/api/lib/domain";
 
 describe("TranslationServiceImpl", () => {
   it("should translate text correctly", async () => {
