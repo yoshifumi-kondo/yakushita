@@ -1,4 +1,4 @@
-import { TranslationServiceImpl } from "@/api/service/translation/TranslationService";
+import { TranslationService } from "@/api/service/translation/TranslationService";
 import { OpenAiService } from "@/api/lib/infrastructure/adapter/openai/OpenAiService";
 import {
   OriginalText,
@@ -7,7 +7,7 @@ import {
   LanguagesType,
 } from "@/api/lib/domain";
 
-describe("TranslationServiceImpl", () => {
+describe("TranslationService", () => {
   it("should translate text correctly", async () => {
     const mockOpenAiService = jest.createMockFromModule<OpenAiService>(
       "@/api/lib/infrastructure/adapter/openai/OpenAiService.ts"
@@ -15,7 +15,7 @@ describe("TranslationServiceImpl", () => {
     mockOpenAiService.askGptV3_5Turbo = jest
       .fn()
       .mockResolvedValue("Translated text");
-    const service = new TranslationServiceImpl(mockOpenAiService);
+    const service = new TranslationService(mockOpenAiService);
     const originalText = new OriginalText("Test text");
     const config = new TranslationConfig(
       new Language(LanguagesType.ENGLISH),

@@ -8,7 +8,7 @@ import {
   TranslatedText,
 } from "@/api/lib/domain";
 
-export class TranslationServiceImpl implements ITranslationService {
+export class TranslationService implements ITranslationService {
   constructor(private openAiService: OpenAiService) {}
   async translate(originalText: OriginalText, config: TranslationConfig) {
     try {
