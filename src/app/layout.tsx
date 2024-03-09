@@ -4,6 +4,9 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { initialize } from "@/api/utils/initialize";
+import { getServerSession } from "next-auth";
+import { NextAuthProvider } from "@/provider/NextAuthProvider";
+import { authOptions } from "@/utils/nextAuth/authOptions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +21,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   await initialize();
-
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
+        <NextAuthProvider session={session}>{children}</NextAuthProvider>
         <Analytics />
         <SpeedInsights />
       </body>
