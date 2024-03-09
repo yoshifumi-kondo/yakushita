@@ -3,13 +3,14 @@ import GoogleProvider from "next-auth/providers/google";
 import { SignInOrSignUpUsecase } from "@/api/usecase/auth/SingInOrSignUpUsecase";
 import { UserAuth, GoogleAuth } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
+import { ENV_KEY, getEnvValue } from "@/utils/geEnv";
 
 export const authOptions: AuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET ?? "",
+  secret: getEnvValue(ENV_KEY.NEXTAUTH_SECRET),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      clientId: getEnvValue(ENV_KEY.GOOGLE_CLIENT_ID),
+      clientSecret: getEnvValue(ENV_KEY.GOOGLE_CLIENT_SECRET),
     }),
   ],
   callbacks: {
