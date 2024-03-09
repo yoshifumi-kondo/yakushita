@@ -28,14 +28,19 @@ export const authOptions: AuthOptions = {
         return false;
       } catch (e) {
         console.error(e);
-        return false;
+        return Promise.reject(new Error("An error occurred during sign in."));
       }
     },
     async jwt({ token, user }) {
-      if (user) {
-        token.userId = user.userId;
+      try {
+        if (user) {
+          token.userId = user.userId;
+        }
+        return token;
+      } catch (e) {
+        console.error(e);
+        return Promise.reject(new Error("An error occurred during jwt."));
       }
-      return token;
     },
     async session({ session, token }) {
       try {
@@ -43,7 +48,7 @@ export const authOptions: AuthOptions = {
         return session;
       } catch (e) {
         console.error(e);
-        return session;
+        return Promise.reject(new Error("An error occurred during session."));
       }
     },
   },
