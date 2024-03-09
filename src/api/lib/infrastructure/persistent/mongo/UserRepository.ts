@@ -13,40 +13,60 @@ export class UserRepository implements IUserRepository {
   }
 
   async createUser(user: User): Promise<void> {
-    const newUser = new this.MongooseUserModel(user.toJSON());
-    await newUser.save();
+    try {
+      const newUser = new this.MongooseUserModel(user.toJSON());
+      await newUser.save();
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw new Error("Failed to create user");
+    }
   }
 
   async getUserById(userId: UserId): Promise<User | null> {
-    const userDoc = await this.MongooseUserModel.findById(
-      userId.toJSON()
-    ).exec();
-    if (!userDoc) {
-      return null;
+    try {
+      const userDoc = await this.MongooseUserModel.findById(
+        userId.toJSON()
+      ).exec();
+      if (!userDoc) {
+        return null;
+      }
+      const { id, auth: userAuth } = userDoc;
+      const googleAuth = userAuth?.google
+        ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
+        : undefined;
+      return new User(new UserId(id), new UserAuth({ google: googleAuth }));
+    } catch (error) {
+      console.error("Error getting user by ID:", error);
+      throw new Error("Failed to get user by ID");
     }
-    const { id, auth: userAuth } = userDoc;
-    const googleAuth = userAuth?.google
-      ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
-      : undefined;
-    return new User(new UserId(id), new UserAuth({ google: googleAuth }));
   }
 
   async getUserByAuth(auth: UserAuth): Promise<User | null> {
-    const { google } = auth.toJSON();
-    const userDoc = await this.MongooseUserModel.findOne({
-      "auth.google.id": google?.id,
-    }).exec();
-    if (!userDoc) {
-      return null;
+    try {
+      const { google } = auth.toJSON();
+      const userDoc = await this.MongooseUserModel.findOne({
+        "auth.google.id": google?.id,
+      }).exec();
+      if (!userDoc) {
+        return null;
+      }
+      const { id, auth: userAuth } = userDoc;
+      const googleAuth = userAuth?.google
+        ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
+        : undefined;
+      return new User(new UserId(id), new UserAuth({ google: googleAuth }));
+    } catch (error) {
+      console.error("Error getting user by auth:", error);
+      throw new Error("Failed to get user by auth");
     }
-    const { id, auth: userAuth } = userDoc;
-    const googleAuth = userAuth?.google
-      ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
-      : undefined;
-    return new User(new UserId(id), new UserAuth({ google: googleAuth }));
   }
 
   async deleteUser(id: UserId): Promise<void> {
-    await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
+    try {
+      await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      throw new Error("Failed to delete user");
+    }
   }
 }
