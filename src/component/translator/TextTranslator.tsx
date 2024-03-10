@@ -1,20 +1,30 @@
 "use client";
-import { useState } from "react";
+import { useDebounce } from "@/utils/useDebounce";
+import { useEffect, useState } from "react";
 
 export const TextTranslator = () => {
   const [inputText, setInputText] = useState("Hello, World!");
   const [translatedText, setTranslatedText] = useState("Bonjour, le monde!");
-  const onChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const debouncedInputText = useDebounce(inputText, 500);
+  useEffect(() => {
+    const translateText = async () => {
+      if (debouncedInputText) {
+        const response = await fetch('/api/translate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text: debouncedInputText }),
+        });
+        const res = await response.json();
+        setTranslatedText(res.translatedText);
+      }
+    };
+    translateText();
+  }, [debouncedInputText]); 
+
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
-    const response = await fetch("/api/translate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text: e.target.value }),
-    });
-    const res = await response.json();
-    setTranslatedText(res.translatedText);
   };
 
   return (
