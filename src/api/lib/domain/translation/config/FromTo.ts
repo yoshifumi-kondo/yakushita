@@ -2,16 +2,21 @@ import { Language } from "@/api/lib/domain";
 
 const symbol = Symbol("TranslationConfig");
 
-export class TranslationConfig {
+export class FromTo {
   public static [symbol] = symbol;
   private to: Language;
   private from: Language;
 
-  constructor(to: Language, from: Language) {
-    this.to = to;
+  constructor(from: Language, to: Language) {
     this.from = from;
+    this.to = to;
   }
-
+  getTo() {
+    return this.to;
+  }
+  getFrom() {
+    return this.from;
+  }
   toJSON() {
     return {
       to: this.to.toJSON(),

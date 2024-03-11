@@ -13,6 +13,10 @@ export class Language {
     this._language = language;
   }
 
+  isSameLanguage(language: Language) {
+    return this._language === language._language;
+  }
+
   toJSON() {
     return this._language;
   }
