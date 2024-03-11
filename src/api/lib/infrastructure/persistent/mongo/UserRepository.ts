@@ -1,80 +1,72 @@
-import { DatabaseError } from "@/api/error";
 import { UserId, GoogleAuth, User, UserAuth } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
+import { BaseRepository } from "@/api/lib/infrastructure/persistent/mongo/BaseRepository";
 import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/Schema";
-import { MongoDBService } from "@/api/lib/infrastructure/persistent/mongo/Service";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import mongoose from "mongoose";
 
-export class UserRepository implements IUserRepository {
+export class UserRepository extends BaseRepository implements IUserRepository {
   private readonly MongooseUserModel;
-  private readonly mongoDBService: MongoDBService;
-
   constructor() {
+    super();
     this.MongooseUserModel =
       mongoose.models.User || mongoose.model("User", UserSchema);
-    this.mongoDBService = new MongoDBService();
   }
 
   async createUser(user: User): Promise<void> {
-    try {
-      await this.mongoDBService.connect();
-      const newUser = new this.MongooseUserModel(user.toJSON());
-      await newUser.save();
-    } catch (error) {
-      console.error("Error creating user:", error);
-      throw new DatabaseError("Failed to create user");
-    }
+    await this.performDbOperation(
+      async () => {
+        const newUser = new this.MongooseUserModel(user.toJSON());
+        await newUser.save();
+      },
+      "Error creating user:",
+      "Failed to create user"
+    );
   }
 
   async getUserById(userId: UserId): Promise<User | null> {
-    try {
-      await this.mongoDBService.connect();
-      const userDoc = await this.MongooseUserModel.findById(
-        userId.toJSON()
-      ).exec();
-      if (!userDoc) {
-        return null;
-      }
-      const { id, auth: userAuth } = userDoc;
-      const googleAuth = userAuth?.google
-        ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
-        : undefined;
-      return new User(new UserId(id), new UserAuth({ google: googleAuth }));
-    } catch (error) {
-      console.error("Error getting user by ID:", error);
-      throw new DatabaseError("Failed to get user by ID");
-    }
+    return await this.performDbOperation(
+      async () => {
+        const userDoc = await this.MongooseUserModel.findById(
+          userId.toJSON()
+        ).exec();
+        return this.convertToUser(userDoc);
+      },
+      "Error getting user by ID:",
+      "Failed to get user by ID"
+    );
   }
 
   async getUserByAuth(auth: UserAuth): Promise<User | null> {
-    try {
-      await this.mongoDBService.connect();
-      const { google } = auth.toJSON();
-      const userDoc = await this.MongooseUserModel.findOne({
-        "auth.google.id": google?.id,
-      }).exec();
-      if (!userDoc) {
-        return null;
-      }
-      const { id, auth: userAuth } = userDoc;
-      const googleAuth = userAuth?.google
-        ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
-        : undefined;
-      return new User(new UserId(id), new UserAuth({ google: googleAuth }));
-    } catch (error) {
-      console.error("Error getting user by auth:", error);
-      throw new DatabaseError("Failed to get user by auth");
-    }
+    return await this.performDbOperation(
+      async () => {
+        const { google } = auth.toJSON();
+        const userDoc = await this.MongooseUserModel.findOne({
+          "auth.google.id": google?.id,
+        }).exec();
+        return this.convertToUser(userDoc);
+      },
+      "Error getting user by auth:",
+      "Failed to get user by auth"
+    );
   }
 
   async deleteUser(id: UserId): Promise<void> {
-    try {
-      await this.mongoDBService.connect();
-      await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      throw new DatabaseError("Failed to delete user");
-    }
+    await this.performDbOperation(
+      async () => {
+        await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
+      },
+      "Error deleting user:",
+      "Failed to delete user"
+    );
+  }
+
+  private convertToUser(userDoc: any): User | null {
+    if (!userDoc) return null;
+    const { id, auth: userAuth } = userDoc;
+    const googleAuth = userAuth?.google
+      ? new GoogleAuth(new GoogleAuthId(userAuth.google.id))
+      : undefined;
+    return new User(new UserId(id), new UserAuth({ google: googleAuth }));
   }
 }
