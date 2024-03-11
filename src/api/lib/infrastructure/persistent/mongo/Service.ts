@@ -1,12 +1,12 @@
 import { ENV_KEY, getEnvValue } from "@/utils/geEnv";
 import mongoose from "mongoose";
 
-export class MongoDBConnection {
-  private static instance: mongoose.Connection | null = null;
+export class MongoDBService {
+  private instance: mongoose.Connection | null = null;
 
-  private constructor() {}
+  public constructor() {}
 
-  public static async init(): Promise<void> {
+  public async connect(): Promise<void> {
     if (!this.instance) {
       console.debug("MongoDB connection initializing");
       const mongoDBUrl = getEnvValue(ENV_KEY.MONGODB_URL);
