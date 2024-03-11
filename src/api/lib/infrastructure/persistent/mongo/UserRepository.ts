@@ -1,8 +1,8 @@
 import { DatabaseError } from "@/api/error";
 import { UserId, GoogleAuth, User, UserAuth } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
-import { MongoDBService } from "@/api/lib/infrastructure/persistent/mongo/Service";
 import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/Schema";
+import { MongoDBService } from "@/api/lib/infrastructure/persistent/mongo/Service";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import mongoose from "mongoose";
 
