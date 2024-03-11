@@ -1,5 +1,1 @@
-import dbConnect from "@/api/lib/infrastructure/persistent/mongo/connection";
-
-export const initializeServer = async () => {
-  await dbConnect();
-};
+export const initializeServer = async () => {};

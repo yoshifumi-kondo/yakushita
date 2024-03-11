@@ -3,6 +3,7 @@ export const enum ENV_KEY {
   NEXTAUTH_SECRET = "NEXTAUTH_SECRET",
   GOOGLE_CLIENT_ID = "GOOGLE_CLIENT_ID",
   GOOGLE_CLIENT_SECRET = "GOOGLE_CLIENT_SECRET",
+  MONGODB_URI = "MONGODB_URI",
 }
 
 export const getEnvValue = (key: ENV_KEY): string => {

@@ -1,7 +1,7 @@
 import { ENV_KEY, getEnvValue } from "@/utils/geEnv";
 import mongoose from "mongoose";
 
-const DB_URL = getEnvValue(ENV_KEY.MONGODB_URL);
+const DB_URL = getEnvValue(ENV_KEY.MONGODB_URI);
 
 if (!DB_URL) {
   throw new Error(
