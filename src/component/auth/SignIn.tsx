@@ -19,6 +19,18 @@ export default function Component() {
     <>
       Not signed in <br />
       <button onClick={() => signIn("google")}>Sign in with Google</button>
+      <button
+        onClick={async () => {
+          await fetch("/api/connect-test", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        }}
+      >
+        test
+      </button>
     </>
   );
 }
