@@ -1,20 +1,24 @@
 import { DatabaseError } from "@/api/error";
 import { UserId, GoogleAuth, User, UserAuth } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
-import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/schema";
+import { MongoDBService } from "@/api/lib/infrastructure/persistent/mongo/Service";
+import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/Schema";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import mongoose from "mongoose";
 
 export class UserRepository implements IUserRepository {
   private readonly MongooseUserModel;
+  private readonly mongoDBService: MongoDBService;
 
   constructor() {
     this.MongooseUserModel =
       mongoose.models.User || mongoose.model("User", UserSchema);
+    this.mongoDBService = new MongoDBService();
   }
 
   async createUser(user: User): Promise<void> {
     try {
+      await this.mongoDBService.connect();
       const newUser = new this.MongooseUserModel(user.toJSON());
       await newUser.save();
     } catch (error) {
@@ -25,6 +29,7 @@ export class UserRepository implements IUserRepository {
 
   async getUserById(userId: UserId): Promise<User | null> {
     try {
+      await this.mongoDBService.connect();
       const userDoc = await this.MongooseUserModel.findById(
         userId.toJSON()
       ).exec();
@@ -44,6 +49,7 @@ export class UserRepository implements IUserRepository {
 
   async getUserByAuth(auth: UserAuth): Promise<User | null> {
     try {
+      await this.mongoDBService.connect();
       const { google } = auth.toJSON();
       const userDoc = await this.MongooseUserModel.findOne({
         "auth.google.id": google?.id,
@@ -64,6 +70,7 @@ export class UserRepository implements IUserRepository {
 
   async deleteUser(id: UserId): Promise<void> {
     try {
+      await this.mongoDBService.connect();
       await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
     } catch (error) {
       console.error("Error deleting user:", error);
