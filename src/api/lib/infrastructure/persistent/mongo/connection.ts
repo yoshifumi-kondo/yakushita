@@ -1,28 +1,44 @@
 import { ENV_KEY, getEnvValue } from "@/utils/geEnv";
 import mongoose from "mongoose";
 
-export class MongoDBConnection {
-  private static instance: mongoose.Connection | null = null;
+const DB_URL = getEnvValue(ENV_KEY.MONGODB_URL);
 
-  private constructor() {}
-
-  public static async init(): Promise<void> {
-    if (!this.instance) {
-      console.debug("MongoDB connection initializing");
-      const mongoDBUrl = getEnvValue(ENV_KEY.MONGODB_URL);
-      try {
-        await mongoose.connect(mongoDBUrl);
-        this.instance = mongoose.connection;
-        this.instance.on(
-          "error",
-          console.error.bind(console, "MongoDB connection error:")
-        );
-        this.instance.once("open", () => {
-          console.info("MongoDB connection successful");
-        });
-      } catch (error) {
-        console.error(`MongoDB connection failed: ${error}`);
-      }
-    }
-  }
+if (!DB_URL) {
+  throw new Error(
+    "Please define the DB_URL environment variable inside .env.local"
+  );
 }
+
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections growing exponentially
+ * during API Route usage.
+ */
+let cached = global.mongoose ?? { conn: null, promise: null };
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function dbConnect() {
+  if (cached.conn) {
+    console.log("--- db connected ---");
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = mongoose.connect(DB_URL, opts).then((mongoose) => {
+      console.log("--- db connected ---");
+      return mongoose;
+    });
+  }
+  cached.conn = await cached.promise;
+  console.log("--- db connected ---");
+  return cached.conn;
+}
+
+export default dbConnect;
