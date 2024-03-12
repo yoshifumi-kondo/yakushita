@@ -37,7 +37,7 @@ export class TranslationService implements ITranslationService {
       originalText.toJSON().text
     );
     const rowTranslatedText = await this.openAiService.askGptV3_5Turbo(prompt);
-    if (!rowTranslatedText || rowTranslatedText.trim() === "") {
+    if (!rowTranslatedText?.trim().length) {
       throw new Error("Translation failed: received empty response from GPT-3");
     }
     return new Translated(new Text(rowTranslatedText), config.to);
