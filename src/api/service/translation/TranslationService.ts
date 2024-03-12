@@ -16,7 +16,10 @@ export class TranslationService implements ITranslationService {
       const translatedText = await this.generatePrompt(originalText, config);
       return new Translation(originalText, translatedText, config);
     } catch (error) {
-      console.error("Translation failed", error);
+      console.error(
+        `Translation failed for original text: ${originalText} with config: ${config}`,
+        error
+      );
       throw error;
     }
   }
@@ -34,8 +37,8 @@ export class TranslationService implements ITranslationService {
       originalText.toJSON().text
     );
     const rowTranslatedText = await this.openAiService.askGptV3_5Turbo(prompt);
-    if (!rowTranslatedText) {
-      throw new Error("Translation failed");
+    if (!rowTranslatedText || rowTranslatedText.trim() === "") {
+      throw new Error("Translation failed: received empty response from GPT-3");
     }
     return new Translated(new Text(rowTranslatedText), config.to);
   }
