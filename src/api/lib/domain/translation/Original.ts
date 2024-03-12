@@ -19,10 +19,10 @@ export class Original {
     }
   }
   private overMaxTextLength() {
-    return this._text.getLength() > Original._TEXT_MAX_LENGTH;
+    return this._text.length > Original._TEXT_MAX_LENGTH;
   }
 
-  getLanguage() {
+  get language() {
     return this._language;
   }
 

@@ -12,7 +12,7 @@ export class Translated {
     this._language = language;
   }
 
-  getLanguage() {
+  get language() {
     return this._language;
   }
 

@@ -37,7 +37,7 @@ export class TranslationService implements ITranslationService {
     if (!rowTranslatedText) {
       throw new Error("Translation failed");
     }
-    return new Translated(new Text(rowTranslatedText), config.getTo());
+    return new Translated(new Text(rowTranslatedText), config.to);
   }
   private generateTranslationPrompt(
     from: string,

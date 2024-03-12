@@ -18,7 +18,7 @@ export class Text {
     }
   }
 
-  getLength() {
+  get length() {
     return this._value.length;
   }
 

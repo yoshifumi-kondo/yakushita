@@ -11,15 +11,15 @@ export class TranslationConfig {
   }
 
   matchFromTo(Original: Original, Translated: Translated) {
-    console.log(Original.getLanguage(), this.fromTo.getFrom());
+    console.log(Original.language, this.fromTo.from);
     return (
-      Original.getLanguage().isSameLanguage(this.fromTo.getFrom()) &&
-      Translated.getLanguage().isSameLanguage(this.fromTo.getTo())
+      Original.language.isSameLanguage(this.fromTo.from) &&
+      Translated.language.isSameLanguage(this.fromTo.to)
     );
   }
 
-  getTo() {
-    return this.fromTo.getTo();
+  get to() {
+    return this.fromTo.to;
   }
 
   toJSON() {

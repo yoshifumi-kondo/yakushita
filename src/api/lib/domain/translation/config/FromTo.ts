@@ -4,18 +4,18 @@ const symbol = Symbol("TranslationConfig");
 
 export class FromTo {
   public static [symbol] = symbol;
-  private to: Language;
-  private from: Language;
+  private _to: Language;
+  private _from: Language;
 
   constructor(from: Language, to: Language) {
-    this.from = from;
-    this.to = to;
+    this._from = from;
+    this._to = to;
   }
-  getTo() {
-    return this.to;
+  get to() {
+    return this._to;
   }
-  getFrom() {
-    return this.from;
+  get from() {
+    return this._from;
   }
   toJSON() {
     return {
