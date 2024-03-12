@@ -1,10 +1,13 @@
 import { TranslationService } from "@/api/service/translation/TranslationService";
 import { OpenAiService } from "@/api/lib/infrastructure/adapter/openai/OpenAiService";
 import {
-  OriginalText,
-  TranslationConfig,
+  Original,
   Language,
   LanguagesType,
+  TranslationConfig,
+  FromTo,
+  Text,
+  Translated,
 } from "@/api/lib/domain";
 
 describe("TranslationService", () => {
@@ -16,13 +19,18 @@ describe("TranslationService", () => {
       .fn()
       .mockResolvedValue("Translated text");
     const service = new TranslationService(mockOpenAiService);
-    const originalText = new OriginalText("Test text");
-    const config = new TranslationConfig(
-      new Language(LanguagesType.ENGLISH),
+    const original = new Original(
+      new Text("Test text"),
       new Language(LanguagesType.JAPANESE)
     );
-    const result = await service.translate(originalText, config);
-    expect(result.toJSON().translatedText).toEqual("Translated text");
+    const config = new TranslationConfig(
+      new FromTo(
+        new Language(LanguagesType.JAPANESE),
+        new Language(LanguagesType.ENGLISH)
+      )
+    );
+    const translation = await service.translate(original, config);
+    expect(translation.toJSON().translated.text).toEqual("Translated text");
     expect(mockOpenAiService.askGptV3_5Turbo).toHaveBeenCalledWith(
       `
     Please perform the translation based on the following information, and output only the translated text.
