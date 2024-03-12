@@ -23,7 +23,7 @@ export class Text {
   }
 
   private isEmpty() {
-    return this._value === "";
+    return this._value.trim() === "";
   }
 
   toJSON() {
