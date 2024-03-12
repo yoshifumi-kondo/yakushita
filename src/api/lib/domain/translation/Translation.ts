@@ -19,7 +19,7 @@ export class Translation {
     this.validate();
   }
 
-  validate() {
+  private validate() {
     if (
       !this._translationConfig.matchFromTo(this._original, this._translated)
     ) {
