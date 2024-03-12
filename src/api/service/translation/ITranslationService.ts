@@ -1,12 +1,8 @@
-import {
-  OriginalText,
-  TranslationConfig,
-  TranslationResult,
-} from "@/api/lib/domain";
+import { Original, TranslationConfig, Translation } from "@/api/lib/domain";
 
 export abstract class ITranslationService {
   abstract translate(
-    originalText: OriginalText,
+    originalText: Original,
     config: TranslationConfig
-  ): Promise<TranslationResult>;
+  ): Promise<Translation>;
 }
