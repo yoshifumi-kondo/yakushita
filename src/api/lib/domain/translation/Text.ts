@@ -1,6 +1,7 @@
 const symbol = Symbol("Text");
 
 export class Text {
+  public static MAX_LENGTH = 5000;
   public static [symbol] = symbol;
   private _value: string;
 
@@ -10,7 +11,7 @@ export class Text {
   }
 
   private validate() {
-    if (this._value.length > 5000) {
+    if (this._value.length > Text.MAX_LENGTH) {
       throw new Error("Text is too long");
     }
     if (this.isEmpty()) {
