@@ -9,7 +9,7 @@ export class Text {
     this.validate();
   }
 
-  validate() {
+  private validate() {
     if (this._value.length > 5000) {
       throw new Error("Text is too long");
     }
@@ -22,7 +22,7 @@ export class Text {
     return this._value.length;
   }
 
-  isEmpty() {
+  private isEmpty() {
     return this._value === "";
   }
 
