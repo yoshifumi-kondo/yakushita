@@ -1,4 +1,10 @@
-import { Original, Translated, TranslationConfig } from "@/api/lib/domain";
+import {
+  Language,
+  Original,
+  Text,
+  Translated,
+  TranslationConfig,
+} from "@/api/lib/domain";
 
 const symbol = Symbol("Translation");
 
@@ -27,6 +33,15 @@ export class Translation {
         "Translation config does not match original and translated"
       );
     }
+  }
+  getTextByLanguage(language: Language) {
+    if (this._original.language.isSameLanguage(language)) {
+      return this._original;
+    }
+    if (this._translated.language.isSameLanguage(language)) {
+      return this._translated;
+    }
+    throw new Error("Language not found in translation");
   }
 
   toJSON() {
