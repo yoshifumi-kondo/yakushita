@@ -17,6 +17,15 @@ export class FromTo {
   get from() {
     return this._from;
   }
+  private validate() {
+    if (this._from.isSameLanguage(this._to)) {
+      throw new Error("From and to languages are the same");
+    }
+  }
+  private isSameLanguage() {
+    this._from.isSameLanguage(this._to);
+  }
+
   toJSON() {
     return {
       to: this.to.toJSON(),
