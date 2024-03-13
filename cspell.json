@@ -13,6 +13,7 @@
     "NEXTAUTH",
     "nextjs",
     "openai",
+    "spacy",
     "tailwindcss",
     "Usecase"
   ],
