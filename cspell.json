@@ -9,9 +9,13 @@
     "**/build/**"
   ],
   "words": [
+    "lemmatization",
+    "lemmatize",
+    "Lemmatized",
     "mongoose",
     "NEXTAUTH",
     "nextjs",
+    "NLTK",
     "openai",
     "spacy",
     "tailwindcss",
