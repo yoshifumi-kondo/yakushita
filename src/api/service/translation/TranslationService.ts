@@ -7,10 +7,16 @@ import {
   Translation,
   Translated,
   Text,
+  Language,
+  LanguagesType,
 } from "@/api/lib/domain";
+import { LemmatizeService } from "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeService";
 
 export class TranslationService implements ITranslationService {
-  constructor(private openAiService: OpenAiService) {}
+  constructor(
+    private openAiService: OpenAiService,
+    private lemmatizeService: LemmatizeService
+  ) {}
   async translate(originalText: Original, config: TranslationConfig) {
     try {
       const translatedText = await this.generatePrompt(originalText, config);
@@ -23,7 +29,6 @@ export class TranslationService implements ITranslationService {
       throw error;
     }
   }
-
   private async generatePrompt(
     originalText: Original,
     config: TranslationConfig
@@ -56,5 +61,18 @@ export class TranslationService implements ITranslationService {
 
     Note: This process is intended for use in an automated application. Therefore, please return only the translated text.
     `.trim();
+  }
+  async lemmatize(translation: Translation) {
+    try {
+      const target = translation.getTextByLanguage(
+        new Language(LanguagesType.ENGLISH)
+      );
+      return await this.lemmatizeService.lemmatizeForEnglish(target);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to lemmatize text: ${error.message}`);
+      }
+      throw error;
+    }
   }
 }

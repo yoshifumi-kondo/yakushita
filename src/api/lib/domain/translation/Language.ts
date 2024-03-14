@@ -13,7 +13,7 @@ export class Language {
     this._language = language;
   }
 
-  isSameLanguage(language: Language) {
+  isSame(language: Language) {
     return this._language === language._language;
   }
 

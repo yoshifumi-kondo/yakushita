@@ -7,6 +7,12 @@ export class Original {
   public static [symbol] = symbol;
   private _text: Text;
   private _language: Language;
+  get language() {
+    return this._language;
+  }
+  get text() {
+    return this._text;
+  }
 
   constructor(text: Text, language: Language) {
     this._text = text;
@@ -20,10 +26,6 @@ export class Original {
   }
   private overMaxTextLength() {
     return this._text.length > Original._TEXT_MAX_LENGTH;
-  }
-
-  get language() {
-    return this._language;
   }
 
   toJSON() {

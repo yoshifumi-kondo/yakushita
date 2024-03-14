@@ -4,3 +4,5 @@ export * from "./Text";
 export * from "./Translated";
 export * from "./Translation";
 export * from "./config";
+export * from "./Word.list";
+export * from "./Word";

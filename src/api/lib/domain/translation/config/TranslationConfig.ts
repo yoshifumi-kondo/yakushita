@@ -10,11 +10,10 @@ export class TranslationConfig {
     this.fromTo = fromTo;
   }
 
-  matchFromTo(Original: Original, Translated: Translated) {
-    console.log(Original.language, this.fromTo.from);
+  matchFromTo(original: Original, translated: Translated) {
     return (
-      Original.language.isSameLanguage(this.fromTo.from) &&
-      Translated.language.isSameLanguage(this.fromTo.to)
+      original.language.isSame(this.fromTo.from) &&
+      translated.language.isSame(this.fromTo.to)
     );
   }
 
