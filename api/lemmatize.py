@@ -43,7 +43,7 @@ class handler(BaseHTTPRequestHandler):
         tokens_with_tags = []
         for word, tag in tagged_tokens:
             wn_tag = get_wordnet_pos(tag)
-            lemma = lemmatizer.lemmatize(word, wn_tag)
+            lemma = lemmatizer.lemmatize(word, wn_tag).lower()
             tokens_with_tags.append({"token": word, "POS": tag, "lemma": lemma, "lemma_POS": wn_tag})
 
         # Send Response
