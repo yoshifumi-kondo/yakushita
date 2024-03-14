@@ -41,7 +41,7 @@ export class Translation {
     if (this._translated.language.isSame(language)) {
       return this._translated;
     }
-    throw new Error("Language not found in translation");
+    throw new Error(`Language ${language.toJSON()} not found in translation`);
   }
 
   toJSON() {
