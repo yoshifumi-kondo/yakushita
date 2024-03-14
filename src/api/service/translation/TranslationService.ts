@@ -63,9 +63,16 @@ export class TranslationService implements ITranslationService {
     `.trim();
   }
   async lemmatize(translation: Translation) {
-    const target = translation.getTextByLanguage(
-      new Language(LanguagesType.ENGLISH)
-    );
-    return await this.lemmatizeService.lemmatizeForEnglish(target);
+    try {
+      const target = translation.getTextByLanguage(
+        new Language(LanguagesType.ENGLISH)
+      );
+      return await this.lemmatizeService.lemmatizeForEnglish(target);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to lemmatize text: ${error.message}`);
+      }
+      throw error;
+    }
   }
 }
