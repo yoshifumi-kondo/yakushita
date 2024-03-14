@@ -6,7 +6,7 @@ export class Word {
   public static [symbol]: typeof symbol = symbol;
   private _text: Text;
   private _language: Language;
-  public _partOfSpeech: PartOfSpeech;
+  private _partOfSpeech: PartOfSpeech;
   constructor(text: Text, language: Language, partOfSpeech: PartOfSpeech) {
     this._text = text;
     this._language = language;
