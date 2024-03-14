@@ -40,16 +40,13 @@ export class LemmatizeService {
       );
       throw new Error("Lemmatization failed: target language is not English");
     }
-    const response: Response = await fetch(
-      "http://localhost:3000/api/lemmatize",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: target.text.toJSON() }),
-      }
-    );
+    const response: Response = await fetch("/api/lemmatize", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: target.text.toJSON() }),
+    });
 
     const data: responseData | null = await response.json();
     if (!data) {
