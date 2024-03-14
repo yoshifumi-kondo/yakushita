@@ -1,7 +1,27 @@
+import {
+  FromTo,
+  Language,
+  Text,
+  LanguagesType,
+  Original,
+  TranslationConfig,
+} from "@/api/lib/domain";
+import { translationService } from "@/api/service";
+
 export async function POST(request: Request) {
   const req = await request.json();
-  const translated = await translate(req.text);
-  return Response.json({ originalText: req.text, translatedText: translated });
+  const result = await translationService.translate(
+    // TODO: Use request value
+    new Original(new Text(req.text), new Language(LanguagesType.JAPANESE)),
+    new TranslationConfig(
+      // TODO: Use request value
+      new FromTo(
+        new Language(LanguagesType.JAPANESE),
+        new Language(LanguagesType.ENGLISH)
+      )
+    )
+  );
+  return Response.json({ translated: result.toJSON().translated.text });
 }
 
 async function translate(text: string) {

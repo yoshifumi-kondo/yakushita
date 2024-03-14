@@ -4,6 +4,7 @@ export const enum ENV_KEY {
   GOOGLE_CLIENT_ID = "GOOGLE_CLIENT_ID",
   GOOGLE_CLIENT_SECRET = "GOOGLE_CLIENT_SECRET",
   API_URL = "API_URL",
+  OPENAI_API_KEY = "OPENAI_API_KEY",
 }
 
 export const getEnvValue = (key: ENV_KEY): string => {

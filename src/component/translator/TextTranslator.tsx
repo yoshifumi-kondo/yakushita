@@ -9,19 +9,19 @@ export const TextTranslator = () => {
   useEffect(() => {
     const translateText = async () => {
       if (debouncedInputText) {
-        const response = await fetch('/api/translate', {
-          method: 'POST',
+        const response = await fetch("/api/translate", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ text: debouncedInputText }),
         });
         const res = await response.json();
-        setTranslatedText(res.translatedText);
+        setTranslatedText(res.translated);
       }
     };
     translateText();
-  }, [debouncedInputText]); 
+  }, [debouncedInputText]);
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
