@@ -19,12 +19,12 @@ export class FromTo {
     return this._from;
   }
   private validate() {
-    if (this._from.isSameLanguage(this._to)) {
+    if (this.isSameLanguage()) {
       throw new Error("From and to languages are the same");
     }
   }
   private isSameLanguage() {
-    this._from.isSameLanguage(this._to);
+    return this._from.isSameLanguage(this._to);
   }
 
   toJSON() {
