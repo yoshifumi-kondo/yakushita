@@ -6,4 +6,3 @@ export * from "./Translation";
 export * from "./config";
 export * from "./Word.list";
 export * from "./Word";
-export * from "./Translation";
