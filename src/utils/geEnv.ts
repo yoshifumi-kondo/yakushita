@@ -3,6 +3,7 @@ export const enum ENV_KEY {
   NEXTAUTH_SECRET = "NEXTAUTH_SECRET",
   GOOGLE_CLIENT_ID = "GOOGLE_CLIENT_ID",
   GOOGLE_CLIENT_SECRET = "GOOGLE_CLIENT_SECRET",
+  API_URL = "API_URL",
 }
 
 export const getEnvValue = (key: ENV_KEY): string => {
