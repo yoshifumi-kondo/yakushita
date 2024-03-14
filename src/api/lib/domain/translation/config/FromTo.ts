@@ -10,6 +10,7 @@ export class FromTo {
   constructor(from: Language, to: Language) {
     this._from = from;
     this._to = to;
+    this.validate();
   }
   get to() {
     return this._to;
