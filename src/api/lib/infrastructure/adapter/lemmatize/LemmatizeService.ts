@@ -34,7 +34,7 @@ type responseData = {
 
 export class LemmatizeService {
   async lemmatizeForEnglish(target: Translated | Original): Promise<WordList> {
-    if (!target.language.isSameLanguage(new Language(LanguagesType.ENGLISH))) {
+    if (!target.language.isSame(new Language(LanguagesType.ENGLISH))) {
       console.log(
         `Lemmatization failed: target language is not English: ${target.language}`
       );

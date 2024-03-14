@@ -12,8 +12,8 @@ export class TranslationConfig {
 
   matchFromTo(original: Original, translated: Translated) {
     return (
-      original.language.isSameLanguage(this.fromTo.from) &&
-      translated.language.isSameLanguage(this.fromTo.to)
+      original.language.isSame(this.fromTo.from) &&
+      translated.language.isSame(this.fromTo.to)
     );
   }
 

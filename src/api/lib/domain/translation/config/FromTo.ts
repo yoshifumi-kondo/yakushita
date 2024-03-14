@@ -24,7 +24,7 @@ export class FromTo {
     }
   }
   private isSameLanguage() {
-    return this._from.isSameLanguage(this._to);
+    return this._from.isSame(this._to);
   }
 
   toJSON() {

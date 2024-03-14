@@ -35,10 +35,10 @@ export class Translation {
     }
   }
   getTextByLanguage(language: Language) {
-    if (this._original.language.isSameLanguage(language)) {
+    if (this._original.language.isSame(language)) {
       return this._original;
     }
-    if (this._translated.language.isSameLanguage(language)) {
+    if (this._translated.language.isSame(language)) {
       return this._translated;
     }
     throw new Error("Language not found in translation");
