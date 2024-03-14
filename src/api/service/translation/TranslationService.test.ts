@@ -98,7 +98,7 @@ describe("TranslationService", () => {
       mockLemmatizeService
     );
     const original = new Original(
-      new Text("Test text"),
+      new Text("テスト テキスト"),
       new Language(LanguagesType.JAPANESE)
     );
     const translated = new Translated(
