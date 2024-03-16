@@ -1,3 +1,4 @@
+import functions_framework
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import json
@@ -55,3 +56,25 @@ class handler(BaseHTTPRequestHandler):
             "tokens_with_POS": tokens_with_tags
         }
         self.wfile.write(json.dumps(response).encode('utf-8'))
+
+@functions_framework.http
+def process_text(request):
+    if request.method == 'POST':
+        text = request.get_data().decode('utf-8')
+        if text:
+            # Tokenize and POS tagging
+            tokens = word_tokenize(text)
+            tagged_tokens = pos_tag(tokens)
+
+            tokens_with_tags = []
+            for word, tag in tagged_tokens:
+                wn_tag = get_wordnet_pos(tag)
+                lemma = lemmatizer.lemmatize(word, wn_tag).lower()
+                tokens_with_tags.append({"token": word, "POS": tag, "lemma": lemma, "lemma_POS": wn_tag})
+
+            response = {
+                "original": text,
+                "tokens_with_POS": tokens_with_tags
+            }
+            return json.dumps(response)
+    return 'No text provided'
