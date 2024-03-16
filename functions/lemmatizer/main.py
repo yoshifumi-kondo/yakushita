@@ -60,7 +60,8 @@ class handler(BaseHTTPRequestHandler):
 @functions_framework.http
 def process_text(request):
     if request.method == 'POST':
-        text = request.get_data().decode('utf-8')
+        data = request.get_json()
+        text = data.get("text", "")
         if text:
             # Tokenize and POS tagging
             tokens = word_tokenize(text)
