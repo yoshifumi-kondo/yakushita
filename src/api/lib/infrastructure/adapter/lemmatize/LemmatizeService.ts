@@ -42,7 +42,7 @@ export class LemmatizeService {
       throw new Error("Lemmatization failed: target language is not English");
     }
     const response: Response = await fetch(
-      `${getEnvValue(ENV_KEY.API_URL)}/api/lemmatize`,
+      `${getEnvValue(ENV_KEY.API_URL)}/api2/lemmatize`,
       {
         method: "POST",
         headers: {
