@@ -1,7 +1,7 @@
 import { UserId, GoogleAuth, User, UserAuth } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 import { BaseRepository } from "@/api/lib/infrastructure/persistent/mongo/BaseRepository";
-import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/Schema";
+import { UserModel } from "@/api/lib/infrastructure/persistent/mongo/Schema";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import mongoose from "mongoose";
 
@@ -9,8 +9,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
   private readonly MongooseUserModel;
   constructor() {
     super();
-    this.MongooseUserModel =
-      mongoose.models.User || mongoose.model("User", UserSchema);
+    this.MongooseUserModel = UserModel;
   }
 
   async createUser(user: User): Promise<void> {

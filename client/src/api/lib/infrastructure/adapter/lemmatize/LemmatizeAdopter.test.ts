@@ -1,4 +1,4 @@
-import { LemmatizeService } from "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeService";
+import { LemmatizeAdopter } from "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeAdopter";
 import {
   WordList,
   Word,
@@ -6,17 +6,18 @@ import {
   Language,
   LanguagesType,
   Translated,
+  Lemmatization,
 } from "@/api/lib/domain";
 import {
   PartOfSpeech,
   PartOfSpeechType,
-} from "@/api/lib/domain/translation/PartOfSpeech";
+} from "@/api/lib/domain/lemmatization/PartOfSpeech";
 
-describe("LemmatizeService", () => {
-  let lemmatizeService: LemmatizeService;
+describe("LemmatizeAdopter", () => {
+  let lemmatizeAdopter: LemmatizeAdopter;
 
   beforeEach(() => {
-    lemmatizeService = new LemmatizeService();
+    lemmatizeAdopter = new LemmatizeAdopter();
   });
 
   it("should lemmatize English text correctly", async () => {
@@ -24,30 +25,42 @@ describe("LemmatizeService", () => {
       new Text("The man is running"),
       new Language(LanguagesType.ENGLISH)
     );
-    const expectedWordList = new WordList([
-      new Word(
-        new Text("the"),
-        new Language(LanguagesType.ENGLISH),
-        new PartOfSpeech(PartOfSpeechType.NOUN)
-      ),
-      new Word(
-        new Text("man"),
-        new Language(LanguagesType.ENGLISH),
-        new PartOfSpeech(PartOfSpeechType.NOUN)
-      ),
-      new Word(
-        new Text("be"),
-        new Language(LanguagesType.ENGLISH),
-        new PartOfSpeech(PartOfSpeechType.VERB)
-      ),
-      new Word(
-        new Text("run"),
-        new Language(LanguagesType.ENGLISH),
-        new PartOfSpeech(PartOfSpeechType.VERB)
-      ),
-    ]);
-    const result = await lemmatizeService.lemmatizeForEnglish(target);
-    expect(result).toEqual(expectedWordList);
+    const expectedWordList = new WordList(
+      [
+        new Word(
+          new Text("the"),
+          new Language(LanguagesType.ENGLISH),
+          new PartOfSpeech(PartOfSpeechType.NOUN)
+        ),
+        new Word(
+          new Text("man"),
+          new Language(LanguagesType.ENGLISH),
+          new PartOfSpeech(PartOfSpeechType.NOUN)
+        ),
+        new Word(
+          new Text("run"),
+          new Language(LanguagesType.ENGLISH),
+          new PartOfSpeech(PartOfSpeechType.VERB)
+        ),
+      ],
+      new Language(LanguagesType.ENGLISH)
+    );
+    const exceptedLemmatization = new Lemmatization(
+      expectedWordList,
+      new Language(LanguagesType.ENGLISH),
+      new Text("The man is running")
+    );
+    const result = await lemmatizeAdopter.lemmatizeForEnglish(target);
+    expect(result).toEqual(exceptedLemmatization);
+  });
+  it("should throw an error if target text is shorter than 2 characters", async () => {
+    const target = new Translated(
+      new Text("a"),
+      new Language(LanguagesType.ENGLISH)
+    );
+    expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
+      new Error("Lemmatization failed: no tokens found in the response")
+    );
   });
 
   it("should throw an error if target language is not English", async () => {
@@ -55,7 +68,7 @@ describe("LemmatizeService", () => {
       new Text("Translated text"),
       new Language(LanguagesType.JAPANESE)
     );
-    await expect(lemmatizeService.lemmatizeForEnglish(target)).rejects.toThrow(
+    await expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
       new Error("Lemmatization failed: target language is not English")
     );
   });
@@ -72,7 +85,7 @@ describe("LemmatizeService", () => {
         json: () => Promise.resolve(null),
       } as Response)
     );
-    await expect(lemmatizeService.lemmatizeForEnglish(target)).rejects.toThrow(
+    await expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
       "Lemmatization failed: received empty response from the server"
     );
   });
@@ -88,7 +101,7 @@ describe("LemmatizeService", () => {
         json: () => Promise.resolve([]),
       } as Response)
     );
-    await expect(lemmatizeService.lemmatizeForEnglish(target)).rejects.toThrow(
+    await expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
       "Lemmatization failed: no tokens found in the response"
     );
   });
@@ -113,7 +126,7 @@ describe("LemmatizeService", () => {
           }),
       } as Response)
     );
-    await expect(lemmatizeService.lemmatizeForEnglish(target)).rejects.toThrow(
+    await expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
       "Unknown lemma POS tag: UNKNOWN"
     );
   });

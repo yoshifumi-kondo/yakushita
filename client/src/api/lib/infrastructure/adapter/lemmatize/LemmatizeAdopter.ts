@@ -6,11 +6,12 @@ import {
   Translated,
   Word,
   WordList,
+  Lemmatization,
 } from "@/api/lib/domain";
 import {
   PartOfSpeech,
   PartOfSpeechType,
-} from "@/api/lib/domain/translation/PartOfSpeech";
+} from "@/api/lib/domain/lemmatization/PartOfSpeech";
 import { ENV_KEY, getEnvValue } from "@/utils/geEnv";
 // Enum definition for part-of-speech tags by WordNet
 enum LemmaPOSTag {
@@ -33,8 +34,10 @@ type responseData = {
   tokens_with_POS: TokenWithLemmaPOSTag[];
 };
 
-export class LemmatizeService {
-  async lemmatizeForEnglish(target: Translated | Original): Promise<WordList> {
+export class LemmatizeAdopter {
+  async lemmatizeForEnglish(
+    target: Translated | Original
+  ): Promise<Lemmatization> {
     if (!target.language.isSame(new Language(LanguagesType.ENGLISH))) {
       console.log(
         `Lemmatization failed: target language is not English: ${target.language}`
@@ -58,13 +61,13 @@ export class LemmatizeService {
         "Lemmatization failed: received empty response from the server"
       );
     }
-    const { tokens_with_POS } = data;
+    const { tokens_with_POS, original } = data;
 
     if (!tokens_with_POS || tokens_with_POS.length === 0) {
       throw new Error("Lemmatization failed: no tokens found in the response");
     }
 
-    return new WordList(
+    const wordList = new WordList(
       tokens_with_POS.map(
         (token) =>
           new Word(
@@ -72,7 +75,14 @@ export class LemmatizeService {
             new Language(LanguagesType.ENGLISH),
             this.convertLemmaPOSTagToPartOfSpeech(token.lemma_POS)
           )
-      )
+      ),
+      new Language(LanguagesType.ENGLISH)
+    );
+
+    return new Lemmatization(
+      wordList,
+      new Language(LanguagesType.ENGLISH),
+      new Text(original)
     );
   }
 

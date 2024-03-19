@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-export class OpenAiService {
+export class OpenAiAdapter {
   private openai: OpenAI;
   constructor(apiKey: string) {
     if (!apiKey) {

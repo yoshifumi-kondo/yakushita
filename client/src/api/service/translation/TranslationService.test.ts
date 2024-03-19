@@ -1,5 +1,5 @@
 import { TranslationService } from "@/api/service/translation/TranslationService";
-import { OpenAiService } from "@/api/lib/infrastructure/adapter/openai/OpenAiService";
+import { OpenAiAdapter } from "@/api/lib/infrastructure/adapter/openai/OpenAiAdopter";
 import {
   Original,
   Language,
@@ -7,51 +7,22 @@ import {
   TranslationConfig,
   FromTo,
   Text,
-  Translated,
-  WordList,
-  Word,
-  Translation,
 } from "@/api/lib/domain";
-import { LemmatizeService } from "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeService";
-import {
-  PartOfSpeech,
-  PartOfSpeechType,
-} from "@/api/lib/domain/translation/PartOfSpeech";
 
 describe("TranslationService", () => {
-  let mockOpenAiService: OpenAiService;
-  let mockLemmatizeService: LemmatizeService;
+  let mockOpenAiService: OpenAiAdapter;
 
   beforeEach(() => {
-    mockOpenAiService = jest.createMockFromModule<OpenAiService>(
-      "@/api/lib/infrastructure/adapter/openai/OpenAiService.ts"
-    );
-    mockLemmatizeService = jest.createMockFromModule<LemmatizeService>(
-      "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeService.ts"
+    mockOpenAiService = jest.createMockFromModule<OpenAiAdapter>(
+      "@/api/lib/infrastructure/adapter/openai/OpenAiAdopter"
     );
   });
   it("should translate text correctly", async () => {
     mockOpenAiService.askGptV3_5Turbo = jest
       .fn()
       .mockResolvedValue("Translated text");
-    mockLemmatizeService.lemmatizeForEnglish = jest.fn().mockResolvedValue({
-      words: new WordList([
-        new Word(
-          new Text("test"),
-          new Language(LanguagesType.ENGLISH),
-          new PartOfSpeech(PartOfSpeechType.NOUN)
-        ),
-        new Word(
-          new Text("run"),
-          new Language(LanguagesType.ENGLISH),
-          new PartOfSpeech(PartOfSpeechType.VERB)
-        ),
-      ]),
-    });
-    const service = new TranslationService(
-      mockOpenAiService,
-      mockLemmatizeService
-    );
+
+    const service = new TranslationService(mockOpenAiService);
     const original = new Original(
       new Text("Test text"),
       new Language(LanguagesType.JAPANESE)
@@ -75,51 +46,5 @@ describe("TranslationService", () => {
     Note: This process is intended for use in an automated application. Therefore, please return only the translated text.
     `.trim()
     );
-  });
-
-  it("should lemmatize text correctly", async () => {
-    const wordList = new WordList([
-      new Word(
-        new Text("test"),
-        new Language(LanguagesType.ENGLISH),
-        new PartOfSpeech(PartOfSpeechType.NOUN)
-      ),
-      new Word(
-        new Text("run"),
-        new Language(LanguagesType.ENGLISH),
-        new PartOfSpeech(PartOfSpeechType.VERB)
-      ),
-    ]);
-    mockLemmatizeService.lemmatizeForEnglish = jest
-      .fn()
-      .mockResolvedValue(wordList);
-    const service = new TranslationService(
-      mockOpenAiService,
-      mockLemmatizeService
-    );
-    const original = new Original(
-      new Text("テスト テキスト"),
-      new Language(LanguagesType.JAPANESE)
-    );
-    const translated = new Translated(
-      new Text("Translated text"),
-      new Language(LanguagesType.ENGLISH)
-    );
-
-    const translation = new Translation(
-      original,
-      translated,
-      new TranslationConfig(
-        new FromTo(
-          new Language(LanguagesType.JAPANESE),
-          new Language(LanguagesType.ENGLISH)
-        )
-      )
-    );
-    const lemmatized = await service.lemmatize(translation);
-    expect(mockLemmatizeService.lemmatizeForEnglish).toHaveBeenCalledWith(
-      translated
-    );
-    expect(lemmatized).toEqual(wordList);
   });
 });
