@@ -27,8 +27,7 @@ def get_wordnet_pos(treebank_tag):
     elif treebank_tag.startswith('R'):
         return wordnet.ADV
     else:
-        # If WordNet isn't found, default to a noun
-        return wordnet.NOUN
+        return None
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -44,10 +43,10 @@ class handler(BaseHTTPRequestHandler):
         tokens_with_tags = []
         for word, tag in tagged_tokens:
             wn_tag = get_wordnet_pos(tag)
-            lemma = lemmatizer.lemmatize(word, wn_tag).lower()
-            # NOTE: if Lemma is less than 2 characters, the word seems not necessary to save
-            if len(lemma) > 2:
-                tokens_with_tags.append({"token": word, "POS": tag, "lemma": lemma, "lemma_POS": wn_tag})
+            if wn_tag is not None:
+                lemma = lemmatizer.lemmatize(word, wn_tag).lower()
+                if len(lemma) > 2:
+                    tokens_with_tags.append({"token": word, "POS": tag, "lemma": lemma, "lemma_POS": wn_tag})
 
         # Send Response
         self.send_response(200)
@@ -72,9 +71,10 @@ def process_text(request):
             tokens_with_tags = []
             for word, tag in tagged_tokens:
                 wn_tag = get_wordnet_pos(tag)
-                lemma = lemmatizer.lemmatize(word, wn_tag).lower()
-                if len(lemma) > 2:  # lemmaが2文字より長い場合のみ追加
-                    tokens_with_tags.append({"token": word, "POS": tag, "lemma": lemma, "lemma_POS": wn_tag})
+                if wn_tag is not None:
+                    lemma = lemmatizer.lemmatize(word, wn_tag).lower()
+                    if len(lemma) > 2:
+                        tokens_with_tags.append({"token": word, "POS": tag, "lemma": lemma, "lemma_POS": wn_tag})
 
             response = {
                 "original": text,
