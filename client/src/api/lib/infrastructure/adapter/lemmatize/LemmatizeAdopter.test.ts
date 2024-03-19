@@ -28,11 +28,6 @@ describe("LemmatizeAdopter", () => {
     const expectedWordList = new WordList(
       [
         new Word(
-          new Text("the"),
-          new Language(LanguagesType.ENGLISH),
-          new PartOfSpeech(PartOfSpeechType.NOUN)
-        ),
-        new Word(
           new Text("man"),
           new Language(LanguagesType.ENGLISH),
           new PartOfSpeech(PartOfSpeechType.NOUN)
