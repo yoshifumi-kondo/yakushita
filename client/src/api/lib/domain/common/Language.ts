@@ -12,6 +12,9 @@ export class Language {
   constructor(language: LanguagesType) {
     this._language = language;
   }
+  isEnglish() {
+    return this._language === LanguagesType.ENGLISH;
+  }
 
   isSame(language: Language) {
     return this._language === language._language;
