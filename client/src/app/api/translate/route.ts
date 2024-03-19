@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react";
 import {
   FromTo,
   Language,
@@ -5,21 +6,33 @@ import {
   LanguagesType,
   Original,
   TranslationConfig,
+  UserId,
 } from "@/api/lib/domain";
-import { translationService } from "@/api/service";
+import { TransLateUseCase } from "@/api/usecase/translate/TranslateUseCase";
+import { IncomingHttpHeaders } from "http";
 
 export async function POST(request: Request) {
-  const req = await request.json();
-  const result = await translationService.translate(
-    // TODO: Use request value
-    new Original(new Text(req.text), new Language(LanguagesType.JAPANESE)),
+  const headers: IncomingHttpHeaders = {};
+  request.headers.forEach((value, key) => {
+    headers[key] = value;
+  });
+
+  const session = await getSession({ req: { headers } });
+
+  if (!session || !session.userId) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  const body = await request.json();
+  const result = await TransLateUseCase(
+    new Original(new Text(body.text), new Language(LanguagesType.JAPANESE)),
     new TranslationConfig(
-      // TODO: Use request value
       new FromTo(
         new Language(LanguagesType.JAPANESE),
         new Language(LanguagesType.ENGLISH)
       )
-    )
+    ),
+    new UserId(session.userId)
   );
   return Response.json({ translated: result.toJSON().translated.text });
 }
