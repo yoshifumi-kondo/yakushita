@@ -9,7 +9,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: rootpass
   lemmatizer:
     build:
-      context: ./functions/lemmatizer
+      context: ./functions/lemmatizer/en
       dockerfile: Dockerfile
     ports:
       - "4001:8080"
