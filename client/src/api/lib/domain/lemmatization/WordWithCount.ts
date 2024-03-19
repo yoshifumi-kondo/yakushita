@@ -12,8 +12,8 @@ export class WordWithCount {
   }
   toJSON() {
     return {
-      word: this._word,
-      count: this._count,
+      word: this._word.toJSON(),
+      count: this._count.toJSON(),
     };
   }
 }

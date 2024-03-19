@@ -62,7 +62,7 @@ export class LemmatizationRepository
     );
   }
 
-  async getTopWords(
+  async getTopWordList(
     userId: UserId,
     limit: number = 10
   ): Promise<WordWithCountList> {
@@ -70,7 +70,7 @@ export class LemmatizationRepository
       async () => {
         const topWords = await this.MongooseWordModel.find(
           { userId: userId.toJSON() },
-          { word: 1, count: 1, _id: 0 }
+          { word: 1, count: 1, _id: 0, language: 1, partOfSpeech: 1 }
         )
           .sort({ count: -1 })
           .limit(limit)

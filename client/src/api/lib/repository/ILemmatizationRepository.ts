@@ -3,7 +3,7 @@ import { WordWithCountList } from "@/api/lib/domain/lemmatization/WordWithCountL
 
 export abstract class ILemmatizationRepository {
   abstract save(lemmatization: Lemmatization, userId: UserId): Promise<void>;
-  abstract getTopWords(
+  abstract getTopWordList(
     userId: UserId,
     limit: number
   ): Promise<WordWithCountList>;
