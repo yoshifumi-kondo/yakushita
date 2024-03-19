@@ -1,0 +1,3 @@
+flask
+functions-framework
+nltk>=3.5
