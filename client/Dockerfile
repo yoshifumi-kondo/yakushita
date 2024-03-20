@@ -11,7 +11,7 @@ COPY ./package.json ./package-lock.json ./
 RUN npm ci
 
 # Copy the current directory contents into the container at /app
-COPY ./client/ .
+COPY ./ .
 
 # Build the app
 RUN npm run build
