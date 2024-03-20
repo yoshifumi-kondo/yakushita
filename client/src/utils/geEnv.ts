@@ -13,7 +13,8 @@ export const getEnvValue = (key: ENV_KEY): string => {
   const { serverRuntimeConfig } = getConfig();
   const value = serverRuntimeConfig[key];
   if (!value) {
-    throw new Error(`Environment variable ${key} is not defined`);
+    console.error(`Environment variable ${key} is not defined`);
+    return "";
   }
   return value;
 };
