@@ -7,7 +7,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: rootuser
       MONGO_INITDB_ROOT_PASSWORD: rootpass
-  lemmatizer:
+  english-lemmatizer:
     build:
       context: ./functions/lemmatizer/en
       dockerfile: Dockerfile
