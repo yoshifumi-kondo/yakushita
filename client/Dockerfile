@@ -1,30 +1,29 @@
-# Use an official Node.js runtime as the base image
 FROM node:20-alpine
 
-# Set the working directory in the container to /app
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
 COPY ./package.json ./package-lock.json ./
 
-# Install project dependencies
 RUN npm ci
 
-# Copy the current directory contents into the container at /app
 COPY ./ .
 
-# Build the app with build-time environment variables
-RUN MONGODB_URL=$(cat $MONGODB_URL_FILE) \
-    NEXTAUTH_SECRET=$(cat $NEXTAUTH_SECRET_FILE) \
-    GOOGLE_CLIENT_ID=$(cat $GOOGLE_CLIENT_ID_FILE) \
-    GOOGLE_CLIENT_SECRET=$(cat $GOOGLE_CLIENT_SECRET_FILE) \
-    ENGLISH_LEMMATIZER_URL=$(cat $ENGLISH_LEMMATIZER_URL_FILE) \
-    OPENAI_API_KEY=$(cat $OPENAI_API_KEY_FILE) \
-    npm run build && \
-    rm -f $MONGODB_URL_FILE $NEXTAUTH_SECRET_FILE $GOOGLE_CLIENT_ID_FILE $GOOGLE_CLIENT_SECRET_FILE $ENGLISH_LEMMATIZER_URL_FILE $OPENAI_API_KEY_FILE
+ARG MONGODB_URL
+ARG NEXTAUTH_SECRET
+ARG GOOGLE_CLIENT_ID
+ARG GOOGLE_CLIENT_SECRET
+ARG ENGLISH_LEMMATIZER_URL
+ARG OPENAI_API_KEY
 
-# Expose port 3000 for the app
+ENV MONGODB_URL=$MONGODB_URL
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+ENV GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+ENV ENGLISH_LEMMATIZER_URL=$ENGLISH_LEMMATIZER_URL
+ENV OPENAI_API_KEY=$OPENAI_API_KEY
+
+RUN npm run build
+
 EXPOSE 3000
 
-# Define the command to run the app
 CMD ["npm", "start"]
