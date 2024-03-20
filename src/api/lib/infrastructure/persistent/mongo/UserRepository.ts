@@ -1,8 +1,8 @@
-import { UserId, GoogleAuth, User, UserAuth } from "@/api/lib/domain";
+import { GoogleAuth, User, UserAuth, UserId } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 import { BaseRepository } from "@/api/lib/infrastructure/persistent/mongo/BaseRepository";
 import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/Schema";
-import { IUserRepository } from "@/api/lib/repository/IUserRepository";
+import type { IUserRepository } from "@/api/lib/repository/IUserRepository";
 import mongoose from "mongoose";
 
 export class UserRepository extends BaseRepository implements IUserRepository {
@@ -61,6 +61,8 @@ export class UserRepository extends BaseRepository implements IUserRepository {
     );
   }
 
+  // TODO: Remove any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   private convertToUser(userDoc: any): User | null {
     if (!userDoc) return null;
     const { id, auth: userAuth } = userDoc;
