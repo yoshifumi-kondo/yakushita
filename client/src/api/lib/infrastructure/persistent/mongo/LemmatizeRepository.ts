@@ -6,9 +6,12 @@ import {
   UserId,
   Word,
   WordCount,
+  WordList,
   WordWithCount,
   WordWithCountList,
 } from "@/api/lib/domain";
+import { Sentence } from "@/api/lib/domain/lemmatization/Sentence";
+import { SentenceList } from "@/api/lib/domain/lemmatization/SentenceList";
 import { BaseRepository } from "@/api/lib/infrastructure/persistent/mongo/BaseRepository";
 import {
   SentenceModel,
@@ -92,6 +95,40 @@ export class LemmatizationRepository
       },
       "Error getting top words:",
       "Failed to get top words"
+    );
+  }
+
+  async getSentenceListByWord(
+    word: Word,
+    userId: UserId
+  ): Promise<SentenceList | null> {
+    return await this.performDbOperation(
+      async () => {
+        const { text, language, partOfSpeech } = word.toJSON();
+        const wordDoc = await this.MongooseWordModel.findOne({
+          word: text,
+          language,
+          partOfSpeech,
+          userId: userId.toJSON(),
+        });
+
+        if (!wordDoc) {
+          return null;
+        }
+
+        const sentenceDocs = await this.MongooseSentenceModel.find({
+          _id: { $in: wordDoc.sentences },
+          userId: userId.toJSON(),
+        });
+
+        return new SentenceList(
+          sentenceDocs.map(
+            (sentenceDoc) => new Sentence(new Text(sentenceDoc.content))
+          )
+        );
+      },
+      "Error getting word list by sentence ID:",
+      "Failed to get word list by sentence ID"
     );
   }
 }

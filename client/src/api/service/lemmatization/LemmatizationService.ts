@@ -5,6 +5,7 @@ import {
   Lemmatization,
   User,
   UserId,
+  Word,
 } from "@/api/lib/domain";
 import { LemmatizeAdopter } from "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeAdopter";
 import { ILemmatizationRepository } from "@/api/lib/repository/ILemmatizationRepository";
@@ -48,6 +49,20 @@ export class LemmatizationService implements ILemmatizationService {
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new Error(`Failed to get top words: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+  async getSentencesByWord(word: Word, userId: UserId) {
+    try {
+      const wordList = await this.lemmatizationRepository.getSentenceListByWord(
+        word,
+        userId
+      );
+      return wordList;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to get sentences by word: ${error.message}`);
       }
       throw error;
     }
