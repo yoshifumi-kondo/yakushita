@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "npx biome lint src",
+    "lint:fix": "npx biome lint src --apply",
+    "format": "npx biome check src --apply"
   },
   "dependencies": {
     "@vercel/analytics": "^1.2.2",
