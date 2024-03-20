@@ -13,7 +13,9 @@ export const getEnvValue = (key: ENV_KEY): string => {
   const { serverRuntimeConfig } = getConfig();
   const value = serverRuntimeConfig[key];
   if (!value) {
-    throw new Error(`Environment variable ${key} is not defined`);
+    // NOTE: when build by cloud build, the environment variable is not set and causes an error
+    console.error(`Environment variable ${key} is not set`);
+    return "";
   }
   return value;
 };
