@@ -1,4 +1,6 @@
-export const enum ENV_KEY {
+import getConfig from "next/config";
+
+export enum ENV_KEY {
   MONGODB_URL = "MONGODB_URL",
   NEXTAUTH_SECRET = "NEXTAUTH_SECRET",
   GOOGLE_CLIENT_ID = "GOOGLE_CLIENT_ID",
@@ -8,7 +10,8 @@ export const enum ENV_KEY {
 }
 
 export const getEnvValue = (key: ENV_KEY): string => {
-  const value = process.env[key];
+  const { serverRuntimeConfig } = getConfig();
+  const value = serverRuntimeConfig[key];
   if (!value) {
     throw new Error(`Environment variable ${key} is not defined`);
   }
