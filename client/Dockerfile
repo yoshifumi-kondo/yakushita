@@ -5,13 +5,13 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
-COPY ../../client/package.json ../../client/package-lock.json ./
+COPY ./package.json ./client/package-lock.json ./
 
 # Install project dependencies
 RUN npm ci
 
 # Copy the current directory contents into the container at /app
-COPY ../../client/ .
+COPY ./client/ .
 
 # Build the app
 RUN npm run build
