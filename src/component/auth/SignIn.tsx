@@ -11,14 +11,18 @@ export default function Component() {
 		return (
 			<>
 				Signed in as {session.userId} <br />
-				<button onClick={() => signOut()}>Sign out</button>
+				<button type="button" onClick={() => signOut()}>
+					Sign out
+				</button>
 			</>
 		);
 	}
 	return (
 		<>
 			Not signed in <br />
-			<button onClick={() => signIn("google")}>Sign in with Google</button>
+			<button type="button" onClick={() => signIn("google")}>
+				Sign in with Google
+			</button>
 		</>
 	);
 }
