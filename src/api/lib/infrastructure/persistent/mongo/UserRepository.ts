@@ -20,7 +20,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         await newUser.save();
       },
       "Error creating user:",
-      "Failed to create user"
+      "Failed to create user",
     );
   }
 
@@ -28,12 +28,12 @@ export class UserRepository extends BaseRepository implements IUserRepository {
     return await this.performDbOperation(
       async () => {
         const userDoc = await this.MongooseUserModel.findById(
-          userId.toJSON()
+          userId.toJSON(),
         ).exec();
         return this.convertToUser(userDoc);
       },
       "Error getting user by ID:",
-      "Failed to get user by ID"
+      "Failed to get user by ID",
     );
   }
 
@@ -47,7 +47,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         return this.convertToUser(userDoc);
       },
       "Error getting user by auth:",
-      "Failed to get user by auth"
+      "Failed to get user by auth",
     );
   }
 
@@ -57,7 +57,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
       },
       "Error deleting user:",
-      "Failed to delete user"
+      "Failed to delete user",
     );
   }
 

@@ -13,7 +13,7 @@ export class MongoDBService {
         this.instance = mongoose.connection;
         this.instance.on(
           "error",
-          console.error.bind(console, "MongoDB connection error:")
+          console.error.bind(console, "MongoDB connection error:"),
         );
         this.instance.once("open", () => {
           console.info("MongoDB connection successful");

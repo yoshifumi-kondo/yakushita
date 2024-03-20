@@ -17,9 +17,9 @@ export async function POST(request: Request) {
       // TODO: Use request value
       new FromTo(
         new Language(LanguagesType.JAPANESE),
-        new Language(LanguagesType.ENGLISH)
-      )
-    )
+        new Language(LanguagesType.ENGLISH),
+      ),
+    ),
   );
   return Response.json({ translated: result.toJSON().translated.text });
 }
