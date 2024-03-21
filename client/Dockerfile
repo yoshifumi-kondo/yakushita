@@ -13,6 +13,9 @@ RUN npm ci
 # Copy the current directory contents into the container at /app
 COPY ./ .
 
+# Set the environment variable to production
+ENV NODE_ENV=production
+
 # Build the app
 RUN npm run build
 
