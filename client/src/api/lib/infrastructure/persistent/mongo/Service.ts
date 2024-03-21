@@ -1,4 +1,4 @@
-import { ENV_KEY, getEnvValue } from "@/utils/geEnv";
+import { ENV_KEY, getEnvValue } from "@/utils/getEnv";
 import mongoose from "mongoose";
 
 export class MongoDBService {

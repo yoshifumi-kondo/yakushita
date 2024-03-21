@@ -12,7 +12,7 @@ import {
   PartOfSpeech,
   PartOfSpeechType,
 } from "@/api/lib/domain/lemmatization/PartOfSpeech";
-import { ENV_KEY, getEnvValue } from "@/utils/geEnv";
+import { ENV_KEY, getEnvValue } from "@/utils/getEnv";
 // Enum definition for part-of-speech tags by WordNet
 enum LemmaPOSTag {
   NOUN = "n",
