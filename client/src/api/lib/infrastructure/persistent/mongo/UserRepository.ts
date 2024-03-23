@@ -1,16 +1,14 @@
 import { GoogleAuth, User, UserAuth, UserId } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 import { BaseRepository } from "@/api/lib/infrastructure/persistent/mongo/BaseRepository";
-import { UserSchema } from "@/api/lib/infrastructure/persistent/mongo/Schema";
-import type { IUserRepository } from "@/api/lib/repository/IUserRepository";
-import mongoose from "mongoose";
+import { UserModel } from "@/api/lib/infrastructure/persistent/mongo/Schema";
+import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 
 export class UserRepository extends BaseRepository implements IUserRepository {
   private readonly MongooseUserModel;
   constructor() {
     super();
-    this.MongooseUserModel =
-      mongoose.models.User || mongoose.model("User", UserSchema);
+    this.MongooseUserModel = UserModel;
   }
 
   async createUser(user: User): Promise<void> {
@@ -20,7 +18,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         await newUser.save();
       },
       "Error creating user:",
-      "Failed to create user",
+      "Failed to create user"
     );
   }
 
@@ -28,12 +26,12 @@ export class UserRepository extends BaseRepository implements IUserRepository {
     return await this.performDbOperation(
       async () => {
         const userDoc = await this.MongooseUserModel.findById(
-          userId.toJSON(),
+          userId.toJSON()
         ).exec();
         return this.convertToUser(userDoc);
       },
       "Error getting user by ID:",
-      "Failed to get user by ID",
+      "Failed to get user by ID"
     );
   }
 
@@ -47,7 +45,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         return this.convertToUser(userDoc);
       },
       "Error getting user by auth:",
-      "Failed to get user by auth",
+      "Failed to get user by auth"
     );
   }
 
@@ -57,7 +55,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
       },
       "Error deleting user:",
-      "Failed to delete user",
+      "Failed to delete user"
     );
   }
 

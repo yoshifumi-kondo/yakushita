@@ -1,9 +1,9 @@
-import { GoogleAuth, UserAuth } from "@/api/lib/domain";
-import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
-import { SignInOrSignUpUsecase } from "@/api/usecase/auth/SingInOrSignUpUsecase";
-import { ENV_KEY, getEnvValue } from "@/utils/geEnv";
-import type { AuthOptions } from "next-auth";
+import { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { SignInOrSignUpUsecase } from "@/api/usecase/auth/SingInOrSignUpUsecase";
+import { UserAuth, GoogleAuth } from "@/api/lib/domain";
+import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
+import { ENV_KEY, getEnvValue } from "@/utils/getEnv";
 
 export const authOptions: AuthOptions = {
   secret: getEnvValue(ENV_KEY.NEXTAUTH_SECRET),

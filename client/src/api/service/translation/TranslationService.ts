@@ -1,22 +1,16 @@
 import type { ITranslationService } from "@/api/service/translation/ITranslationService";
 
+import { OpenAiAdapter } from "@/api/lib/infrastructure/adapter/openai/OpenAiAdopter";
 import {
-  Language,
-  LanguagesType,
-  type Original,
-  Text,
-  Translated,
+  Original,
+  TranslationConfig,
   Translation,
-  type TranslationConfig,
+  Translated,
+  Text,
 } from "@/api/lib/domain";
-import type { LemmatizeService } from "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeService";
-import type { OpenAiService } from "@/api/lib/infrastructure/adapter/openai/OpenAiService";
 
 export class TranslationService implements ITranslationService {
-  constructor(
-    private openAiService: OpenAiService,
-    private lemmatizeService: LemmatizeService,
-  ) {}
+  constructor(private openAiService: OpenAiAdapter) {}
   async translate(originalText: Original, config: TranslationConfig) {
     try {
       const translatedText = await this.generatePrompt(originalText, config);
@@ -24,14 +18,14 @@ export class TranslationService implements ITranslationService {
     } catch (error) {
       console.error(
         `Translation failed for original text: ${originalText} with config: ${config}`,
-        error,
+        error
       );
       throw error;
     }
   }
   private async generatePrompt(
     originalText: Original,
-    config: TranslationConfig,
+    config: TranslationConfig
   ) {
     const {
       fromTo: { to, from },
@@ -39,7 +33,7 @@ export class TranslationService implements ITranslationService {
     const prompt = this.generateTranslationPrompt(
       from,
       to,
-      originalText.toJSON().text,
+      originalText.toJSON().text
     );
     const rowTranslatedText = await this.openAiService.askGptV3_5Turbo(prompt);
     if (!rowTranslatedText?.trim().length) {
@@ -50,7 +44,7 @@ export class TranslationService implements ITranslationService {
   private generateTranslationPrompt(
     from: string,
     to: string,
-    originalText: string,
+    originalText: string
   ) {
     return `
     Please perform the translation based on the following information, and output only the translated text.
@@ -61,18 +55,5 @@ export class TranslationService implements ITranslationService {
 
     Note: This process is intended for use in an automated application. Therefore, please return only the translated text.
     `.trim();
-  }
-  async lemmatize(translation: Translation) {
-    try {
-      const target = translation.getTextByLanguage(
-        new Language(LanguagesType.ENGLISH),
-      );
-      return await this.lemmatizeService.lemmatizeForEnglish(target);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(`Failed to lemmatize text: ${error.message}`);
-      }
-      throw error;
-    }
   }
 }

@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 import { renderHook } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
 import { useDebounce } from "./useDebounce";
+import { act } from "react-dom/test-utils";
 
 describe("useDebounce", () => {
   it("should update value after specified delay", async () => {
@@ -13,7 +13,7 @@ describe("useDebounce", () => {
         useDebounce(value, delay),
       {
         initialProps: { value: "test", delay: 500 },
-      },
+      }
     );
 
     expect(result.current).toBe("test"); // Check initial value

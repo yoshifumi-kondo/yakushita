@@ -1,7 +1,5 @@
 import { NextAuthProvider } from "@/provider/NextAuthProvider";
 import { authOptions } from "@/utils/nextAuth/authOptions";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { Inter } from "next/font/google";
@@ -24,8 +22,6 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NextAuthProvider session={session}>{children}</NextAuthProvider>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

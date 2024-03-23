@@ -1,9 +1,8 @@
-import {
-  type Language,
-  type Original,
-  Text,
-  type Translated,
-  type TranslationConfig,
+import type {
+  Language,
+  Original,
+  Translated,
+  TranslationConfig,
 } from "@/api/lib/domain";
 
 const symbol = Symbol("Translation");
@@ -17,7 +16,7 @@ export class Translation {
   constructor(
     originalText: Original,
     translatedText: Translated,
-    translationConfig: TranslationConfig,
+    translationConfig: TranslationConfig
   ) {
     this._original = originalText;
     this._translated = translatedText;
@@ -30,7 +29,7 @@ export class Translation {
       !this._translationConfig.matchFromTo(this._original, this._translated)
     ) {
       throw new Error(
-        "Translation config does not match original and translated",
+        "Translation config does not match original and translated"
       );
     }
   }
