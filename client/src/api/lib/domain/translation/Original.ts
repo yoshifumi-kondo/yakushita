@@ -1,4 +1,4 @@
-import { Language, Text } from "@/api/lib/domain";
+import type { Language, Text } from "@/api/lib/domain";
 
 const symbol = Symbol("Original");
 

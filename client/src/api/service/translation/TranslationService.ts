@@ -1,4 +1,4 @@
-import { ITranslationService } from "@/api/service/translation/ITranslationService";
+import type { ITranslationService } from "@/api/service/translation/ITranslationService";
 
 import { OpenAiAdapter } from "@/api/lib/infrastructure/adapter/openai/OpenAiAdopter";
 import {

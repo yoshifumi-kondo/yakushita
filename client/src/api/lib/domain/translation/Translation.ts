@@ -1,7 +1,6 @@
-import {
+import type {
   Language,
   Original,
-  Text,
   Translated,
   TranslationConfig,
 } from "@/api/lib/domain";

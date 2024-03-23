@@ -1,4 +1,4 @@
-import { UserAuth } from "@/api/lib/domain";
+import type { UserAuth } from "@/api/lib/domain";
 import { userService } from "@/api/service";
 import { SignInUsecase } from "@/api/usecase/auth/SignInUsecase";
 import { SignUpUsecase } from "@/api/usecase/auth/SignUpUsecase";

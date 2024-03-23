@@ -1,4 +1,4 @@
-import { FromTo, Original, Translated } from "@/api/lib/domain";
+import type { FromTo, Original, Translated } from "@/api/lib/domain";
 
 const symbol = Symbol("TranslationConfig");
 

@@ -1,4 +1,4 @@
-import { UserId, UserAuth } from "@/api/lib/domain";
+import { type UserAuth, UserId } from "@/api/lib/domain";
 
 const symbol = Symbol("User");
 

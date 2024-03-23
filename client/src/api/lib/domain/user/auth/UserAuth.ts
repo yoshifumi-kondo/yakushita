@@ -1,4 +1,4 @@
-import { GoogleAuth } from "@/api/lib/domain";
+import type { GoogleAuth } from "@/api/lib/domain";
 
 const symbol = Symbol("UserAuth");
 export class UserAuth {

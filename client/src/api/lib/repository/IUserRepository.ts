@@ -1,4 +1,4 @@
-import { UserId, UserAuth, User } from "@/api/lib/domain";
+import type { User, UserAuth, UserId } from "@/api/lib/domain";
 
 export abstract class IUserRepository {
   abstract createUser(user: User): Promise<void>;

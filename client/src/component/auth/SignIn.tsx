@@ -1,4 +1,4 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Component() {
   const { data: session } = useSession();
@@ -11,14 +11,18 @@ export default function Component() {
     return (
       <>
         Signed in as {session.userId} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        <button type="button" onClick={() => signOut()}>
+          Sign out
+        </button>
       </>
     );
   }
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn("google")}>Sign in with Google</button>
+      <button type="button" onClick={() => signIn("google")}>
+        Sign in with Google
+      </button>
     </>
   );
 }

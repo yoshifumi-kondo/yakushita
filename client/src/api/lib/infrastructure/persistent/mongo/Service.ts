@@ -4,8 +4,6 @@ import mongoose from "mongoose";
 export class MongoDBService {
   private instance: mongoose.Connection | null = null;
 
-  public constructor() {}
-
   public async connect(): Promise<void> {
     if (!this.instance) {
       console.debug("MongoDB connection initializing");
@@ -15,7 +13,7 @@ export class MongoDBService {
         this.instance = mongoose.connection;
         this.instance.on(
           "error",
-          console.error.bind(console, "MongoDB connection error:")
+          console.error.bind(console, "MongoDB connection error:"),
         );
         this.instance.once("open", () => {
           console.info("MongoDB connection successful");
