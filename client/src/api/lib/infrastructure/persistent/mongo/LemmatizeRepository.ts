@@ -36,7 +36,6 @@ export class LemmatizationRepository
     return await this.performDbOperation(
       async () => {
         const { wordList, language, source } = lemmatization.toJSON();
-
         const sentence = new this.MongooseSentenceModel({
           content: source,
           language: language,
@@ -44,19 +43,30 @@ export class LemmatizationRepository
         });
         await sentence.save();
 
-        for (const word of wordList.list) {
-          const savedWord = await this.MongooseWordModel.findOneAndUpdate(
-            {
+        const bulkOperations = wordList.list.map((word) => ({
+          updateOne: {
+            filter: {
               word: word.text,
               language: word.language,
               userId: userId.toJSON(),
               partOfSpeech: word.partOfSpeech,
             },
-            { $inc: { count: 1 }, $addToSet: { sentences: sentence._id } },
-            { upsert: true, new: true }
-          );
-          sentence.words.push(savedWord._id);
-        }
+            update: {
+              $inc: { count: 1 },
+              $addToSet: { sentences: sentence._id },
+            },
+            upsert: true,
+          },
+        }));
+
+        const bulkWriteResult = await this.MongooseWordModel.bulkWrite(
+          bulkOperations
+        );
+
+        const savedWordIds = Object.values(bulkWriteResult.upsertedIds).map(
+          (id) => id._id
+        );
+        sentence.words.push(...savedWordIds);
 
         await sentence.save();
       },

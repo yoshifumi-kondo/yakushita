@@ -47,7 +47,7 @@ export const TopWordList = () => {
         <ul className="space-y-3 overflow-y-auto flex-1">
           {topWords.map(({ word: { text, partOfSpeech }, count }, index) => (
             <li
-              key={index}
+              key={`${text}-${partOfSpeech}`}
               className="flex justify-between items-center border-b border-gray-200 pb-3 gap-4 cursor-pointer relative z-10"
               onMouseEnter={() => handleWordHover({ text, partOfSpeech })}
               onMouseLeave={handleWordLeave}

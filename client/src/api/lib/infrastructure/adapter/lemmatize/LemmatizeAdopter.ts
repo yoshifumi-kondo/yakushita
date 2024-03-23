@@ -44,18 +44,8 @@ export class LemmatizeAdopter {
       );
       throw new Error("Lemmatization failed: target language is not English");
     }
-    const response: Response = await fetch(
-      `${getEnvValue(ENV_KEY.ENGLISH_LEMMATIZER_URL)}/api/lemmatize`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: target.text.toJSON() }),
-      }
-    );
 
-    const data: responseData | null = await response.json();
+    const data = await this._lemmatizeEnglishText(target.text.toJSON());
     if (!data) {
       throw new Error(
         "Lemmatization failed: received empty response from the server"
@@ -86,20 +76,38 @@ export class LemmatizeAdopter {
     );
   }
 
+  private async _lemmatizeEnglishText(text: string) {
+    try {
+      const response: Response = await fetch(
+        `${getEnvValue(ENV_KEY.ENGLISH_LEMMATIZER_URL)}/api/lemmatize`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text }),
+        }
+      );
+      const data: responseData | null = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(`Failed to lemmatize text: ${error}`);
+    }
+  }
+
   private convertLemmaPOSTagToPartOfSpeech(
     lemmaPOSTag: LemmaPOSTag
   ): PartOfSpeech {
-    switch (lemmaPOSTag) {
-      case LemmaPOSTag.NOUN:
-        return new PartOfSpeech(PartOfSpeechType.NOUN);
-      case LemmaPOSTag.VERB:
-        return new PartOfSpeech(PartOfSpeechType.VERB);
-      case LemmaPOSTag.ADJECTIVE:
-        return new PartOfSpeech(PartOfSpeechType.ADJECTIVE);
-      case LemmaPOSTag.ADVERB:
-        return new PartOfSpeech(PartOfSpeechType.ADVERB);
-      default:
-        throw new Error(`Unknown lemma POS tag: ${lemmaPOSTag}`);
+    const posMapping = {
+      [LemmaPOSTag.NOUN]: PartOfSpeechType.NOUN,
+      [LemmaPOSTag.VERB]: PartOfSpeechType.VERB,
+      [LemmaPOSTag.ADJECTIVE]: PartOfSpeechType.ADJECTIVE,
+      [LemmaPOSTag.ADVERB]: PartOfSpeechType.ADVERB,
+    };
+    const posType = posMapping[lemmaPOSTag];
+    if (!posType) {
+      throw new Error(`Unknown lemma POS tag: ${lemmaPOSTag}`);
     }
+    return new PartOfSpeech(posType);
   }
 }

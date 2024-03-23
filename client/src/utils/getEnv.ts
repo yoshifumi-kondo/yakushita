@@ -9,8 +9,10 @@ export enum ENV_KEY {
   OPENAI_API_KEY = "OPENAI_API_KEY",
 }
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const getEnvValue = (key: ENV_KEY): string => {
-  const env = getConfig().serverRuntimeConfig;
+  const env = isProduction ? getConfig().serverRuntimeConfig : process.env;
   const value = env[key];
   if (!value) {
     throw new Error(`Environment variable ${key} is not defined`);

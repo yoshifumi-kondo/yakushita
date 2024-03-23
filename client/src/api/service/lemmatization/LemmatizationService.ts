@@ -44,14 +44,7 @@ export class LemmatizationService implements ILemmatizationService {
   }
 
   async getTopWords(userId: UserId) {
-    try {
-      return await this.lemmatizationRepository.getTopWordList(userId, 30);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(`Failed to get top words: ${error.message}`);
-      }
-      throw error;
-    }
+    return await this.lemmatizationRepository.getTopWordList(userId, 30);
   }
   async getSentencesByWord(word: Word, userId: UserId) {
     try {
