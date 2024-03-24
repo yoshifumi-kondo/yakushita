@@ -40,7 +40,7 @@ export const TextTranslator = () => {
           <textarea
             className="w-full p-4 text-base text-gray-900 bg-white rounded-lg shadow border border-gray-300 focus:outline-none focus:border-blue-500"
             rows={4}
-            placeholder="Type to traslate."
+            placeholder="Type to translate."
             value={inputText}
             onChange={onChange}
           />
