@@ -1,12 +1,18 @@
 "use client";
 import { useDebounce } from "@/utils/useDebounce";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const TextTranslator = () => {
-  const [inputText, setInputText] = useState("Hello, World!");
-  const [translatedText, setTranslatedText] = useState("Bonjour, le monde!");
+  const [inputText, setInputText] = useState("");
+  const [translatedText, setTranslatedText] = useState("");
+  const isFirstRender = useRef(true);
   const debouncedInputText = useDebounce(inputText, 500);
   useEffect(() => {
+    // Not to call translate api for the first render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const translateText = async () => {
       if (debouncedInputText) {
         const response = await fetch("/api/translate", {
@@ -34,7 +40,7 @@ export const TextTranslator = () => {
           <textarea
             className="w-full p-4 text-base text-gray-900 bg-white rounded-lg shadow border border-gray-300 focus:outline-none focus:border-blue-500"
             rows={4}
-            placeholder="Enter text"
+            placeholder="Type to traslate."
             value={inputText}
             onChange={onChange}
           />
