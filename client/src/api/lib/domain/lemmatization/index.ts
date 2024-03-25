@@ -5,3 +5,5 @@ export * from "./Word";
 export * from "./WordCount";
 export * from "./WordWithCount";
 export * from "./WordWithCountList";
+export * from "./Sentence";
+export * from "./SentenceList";

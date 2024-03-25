@@ -1,4 +1,3 @@
-import { getSession } from "next-auth/react";
 import {
   FromTo,
   Language,
@@ -6,25 +5,17 @@ import {
   LanguagesType,
   Original,
   TranslationConfig,
-  UserId,
 } from "@/api/lib/domain";
-import { TransLateUseCase } from "@/api/usecase/translate/TranslateUseCase";
-import { IncomingHttpHeaders } from "http";
+import { translate } from "@/api/feature/translation/usecase";
+import { getUserIdFromSession } from "@/api/utils/getUserIdFromSession";
 
 export async function POST(request: Request) {
-  const headers: IncomingHttpHeaders = {};
-  request.headers.forEach((value, key) => {
-    headers[key] = value;
-  });
-
-  const session = await getSession({ req: { headers } });
-
-  if (!session || !session.userId) {
+  const userId = await getUserIdFromSession(request);
+  if (!userId) {
     return new Response("Unauthorized", { status: 401 });
   }
-
   const body = await request.json();
-  const result = await TransLateUseCase(
+  const result = await translate.execute(
     new Original(new Text(body.text), new Language(LanguagesType.JAPANESE)),
     new TranslationConfig(
       new FromTo(
@@ -32,16 +23,16 @@ export async function POST(request: Request) {
         new Language(LanguagesType.ENGLISH)
       )
     ),
-    new UserId(session.userId)
+    userId
   );
   return Response.json({ translated: result.toJSON().translated.text });
 }
 
-async function translate(text: string) {
-  await sleep(1000);
-  return "translated: " + text;
-}
+// async function translate(text: string) {
+//   await sleep(1000);
+//   return "translated: " + text;
+// }
 
-async function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// async function sleep(ms: number) {
+//   return new Promise((resolve) => setTimeout(resolve, ms));
+// }
