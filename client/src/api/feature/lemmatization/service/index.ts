@@ -2,7 +2,7 @@ import { LemmatizeAdopter } from "@/api/infrastructure/adapter/lemmatize/Lemmati
 import { LemmatizationService } from "@/api/feature/lemmatization/service/LemmatizationService";
 import { LemmatizationRepository } from "@/api/infrastructure/persistent/mongo/LemmatizeRepository";
 
-export const lemmatizeService = new LemmatizationService(
+export const lemmatizationService = new LemmatizationService(
   new LemmatizeAdopter(),
   new LemmatizationRepository()
 );

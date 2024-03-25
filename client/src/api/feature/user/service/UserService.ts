@@ -18,6 +18,10 @@ export class UserService implements IUserService {
   async getUser(userId: UserId): Promise<User | null> {
     return await this.userRepository.getUserById(userId);
   }
+  async isExist(auth: UserAuth): Promise<boolean> {
+    const user = await this.isExistUser(auth);
+    return Boolean(user);
+  }
 
   async getUserByAuth(auth: UserAuth): Promise<User | null> {
     return await this.userRepository.getUserByAuth(auth);

@@ -1,18 +1,12 @@
-import { getSession } from "next-auth/react";
-import { UserId } from "@/api/lib/domain";
-import { IncomingHttpHeaders } from "http";
-import { GetTopWordsUsecase } from "@/api/feature/translation/usecase/GetTopWordsUsecase";
+import { getTopWordList } from "@/api/feature/lemmatization/usecase";
+import { getUserIdFromSession } from "@/api/utils/getUserIdFromSession";
 
 export async function GET(request: Request) {
-  const headers: IncomingHttpHeaders = {};
-  request.headers.forEach((value, key) => {
-    headers[key] = value;
-  });
-  const session = await getSession({ req: { headers } });
-  if (!session || !session.userId) {
+  const userId = await getUserIdFromSession(request);
+  if (!userId) {
     return new Response("Unauthorized", { status: 401 });
   }
-  const result = await GetTopWordsUsecase(new UserId(session.userId));
+  const result = await getTopWordList.execute(userId);
   const topWordList = result.toJSON();
   return new Response(JSON.stringify(topWordList), {
     status: 200,

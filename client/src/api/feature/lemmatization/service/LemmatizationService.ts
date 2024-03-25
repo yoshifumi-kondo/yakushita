@@ -46,13 +46,14 @@ export class LemmatizationService implements ILemmatizationService {
   async getTopWords(userId: UserId) {
     return await this.lemmatizationRepository.getTopWordList(userId, 30);
   }
-  async getSentencesByWord(word: Word, userId: UserId) {
+  async getSentenceListByWord(word: Word, userId: UserId) {
     try {
-      const wordList = await this.lemmatizationRepository.getSentenceListByWord(
-        word,
-        userId
-      );
-      return wordList;
+      const sentenceList =
+        await this.lemmatizationRepository.getSentenceListByWord(word, userId);
+      if (!sentenceList) {
+        throw new Error("Sentence list not found");
+      }
+      return sentenceList;
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new Error(`Failed to get sentences by word: ${error.message}`);
