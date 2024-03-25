@@ -8,7 +8,7 @@ import {
   Word,
 } from "@/api/lib/domain";
 import { IncomingHttpHeaders } from "http";
-import { GetSentenceListByWord } from "@/api/usecase/translate/GetSentenceListByWord";
+import { GetSentenceListByWord } from "@/api/feature/translation/usecase/GetSentenceListByWord";
 
 export async function GET(request: Request) {
   const headers: IncomingHttpHeaders = {};

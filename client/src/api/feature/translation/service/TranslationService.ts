@@ -1,6 +1,6 @@
-import type { ITranslationService } from "@/api/service/translation/ITranslationService";
+import type { ITranslationService } from "@/api/feature/translation/service/ITranslationService";
 
-import { OpenAiAdapter } from "@/api/lib/infrastructure/adapter/openai/OpenAiAdopter";
+import { OpenAiAdapter } from "@/api/infrastructure/adapter/openai/OpenAiAdopter";
 import {
   Original,
   TranslationConfig,

@@ -1,5 +1,5 @@
-import { TranslationService } from "@/api/service/translation/TranslationService";
-import { OpenAiAdapter } from "@/api/lib/infrastructure/adapter/openai/OpenAiAdopter";
+import { TranslationService } from "@/api/feature/translation/service/TranslationService";
+import { OpenAiAdapter } from "@/api/infrastructure/adapter/openai/OpenAiAdopter";
 import {
   Original,
   Language,

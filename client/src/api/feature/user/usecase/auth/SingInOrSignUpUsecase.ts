@@ -1,7 +1,7 @@
 import type { UserAuth } from "@/api/lib/domain";
-import { userService } from "@/api/service";
-import { SignInUsecase } from "@/api/usecase/auth/SignInUsecase";
-import { SignUpUsecase } from "@/api/usecase/auth/SignUpUsecase";
+import { SignInUsecase } from "@/api/feature/user/usecase/auth/SignInUsecase";
+import { SignUpUsecase } from "@/api/feature/user/usecase/auth/SignUpUsecase";
+import { userService } from "@/api/feature/user/service";
 
 export const SignInOrSignUpUsecase = async (auth: UserAuth) => {
   const user = await userService.getUserByAuth(auth);

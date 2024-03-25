@@ -12,11 +12,11 @@ import {
 } from "@/api/lib/domain";
 import { Sentence } from "@/api/lib/domain/lemmatization/Sentence";
 import { SentenceList } from "@/api/lib/domain/lemmatization/SentenceList";
-import { BaseRepository } from "@/api/lib/infrastructure/persistent/mongo/BaseRepository";
+import { BaseRepository } from "@/api/infrastructure/persistent/mongo/BaseRepository";
 import {
   SentenceModel,
   WordModel,
-} from "@/api/lib/infrastructure/persistent/mongo/Schema";
+} from "@/api/infrastructure/persistent/mongo/Schema";
 import { ILemmatizationRepository } from "@/api/lib/repository/ILemmatizationRepository";
 
 export class LemmatizationRepository

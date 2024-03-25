@@ -12,12 +12,12 @@ import {
   Lemmatization,
   UserId,
 } from "@/api/lib/domain";
-import { LemmatizeAdopter } from "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeAdopter";
+import { LemmatizeAdopter } from "@/api/infrastructure/adapter/lemmatize/LemmatizeAdopter";
 import {
   PartOfSpeech,
   PartOfSpeechType,
 } from "@/api/lib/domain/lemmatization/PartOfSpeech";
-import { LemmatizationService } from "@/api/service/lemmatization/LemmatizationService";
+import { LemmatizationService } from "@/api/feature/lemmatization/service/LemmatizationService";
 import { ILemmatizationRepository } from "@/api/lib/repository/ILemmatizationRepository";
 
 describe("LemmatizationService", () => {

@@ -1,7 +1,7 @@
 import { getSession } from "next-auth/react";
 import { UserId } from "@/api/lib/domain";
 import { IncomingHttpHeaders } from "http";
-import { GetTopWordsUsecase } from "@/api/usecase/translate/GetTopWordsUsecase";
+import { GetTopWordsUsecase } from "@/api/feature/translation/usecase/GetTopWordsUsecase";
 
 export async function GET(request: Request) {
   const headers: IncomingHttpHeaders = {};

@@ -1,5 +1,6 @@
 import { Original, TranslationConfig, UserId } from "@/api/lib/domain";
-import { lemmatizeService, translationService } from "@/api/service";
+import { lemmatizeService } from "@/api/feature/lemmatization/service";
+import { translationService } from "@/api/feature/translation/service";
 
 export const TransLateUseCase = async (
   original: Original,

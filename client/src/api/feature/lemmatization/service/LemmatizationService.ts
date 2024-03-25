@@ -7,9 +7,9 @@ import {
   UserId,
   Word,
 } from "@/api/lib/domain";
-import { LemmatizeAdopter } from "@/api/lib/infrastructure/adapter/lemmatize/LemmatizeAdopter";
+import { LemmatizeAdopter } from "@/api/infrastructure/adapter/lemmatize/LemmatizeAdopter";
 import { ILemmatizationRepository } from "@/api/lib/repository/ILemmatizationRepository";
-import { ILemmatizationService } from "@/api/service/lemmatization/ILemmatizationService";
+import { ILemmatizationService } from "@/api/feature/lemmatization/service/ILemmatizationService";
 
 export class LemmatizationService implements ILemmatizationService {
   constructor(

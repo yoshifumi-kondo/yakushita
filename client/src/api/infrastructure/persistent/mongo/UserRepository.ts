@@ -1,7 +1,7 @@
 import { GoogleAuth, User, UserAuth, UserId } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
-import { BaseRepository } from "@/api/lib/infrastructure/persistent/mongo/BaseRepository";
-import { UserModel } from "@/api/lib/infrastructure/persistent/mongo/Schema";
+import { BaseRepository } from "@/api/infrastructure/persistent/mongo/BaseRepository";
+import { UserModel } from "@/api/infrastructure/persistent/mongo/Schema";
 import { IUserRepository } from "@/api/lib/repository/IUserRepository";
 
 export class UserRepository extends BaseRepository implements IUserRepository {

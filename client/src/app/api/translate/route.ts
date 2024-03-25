@@ -8,7 +8,7 @@ import {
   TranslationConfig,
   UserId,
 } from "@/api/lib/domain";
-import { TransLateUseCase } from "@/api/usecase/translate/TranslateUseCase";
+import { TransLateUseCase } from "@/api/feature/translation/usecase/TranslateUseCase";
 import { IncomingHttpHeaders } from "http";
 
 export async function POST(request: Request) {

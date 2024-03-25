@@ -1,6 +1,6 @@
 import { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { SignInOrSignUpUsecase } from "@/api/usecase/auth/SingInOrSignUpUsecase";
+import { SignInOrSignUpUsecase } from "@/api/feature/user/usecase/auth/SingInOrSignUpUsecase";
 import { UserAuth, GoogleAuth } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 import { ENV_KEY, getEnvValue } from "@/utils/getEnv";

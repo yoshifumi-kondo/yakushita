@@ -1,7 +1,7 @@
 import { UserAlreadyExistsError, UserNotFoundError } from "@/api/error";
 import { User, type UserAuth, UserId } from "@/api/lib/domain";
 import type { IUserRepository } from "@/api/lib/repository/IUserRepository";
-import type { IUserService } from "@/api/service/user/IUserService";
+import type { IUserService } from "@/api/feature/user/service/IUserService";
 
 export class UserService implements IUserService {
   constructor(private readonly userRepository: IUserRepository) {}

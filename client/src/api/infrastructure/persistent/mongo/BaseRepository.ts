@@ -1,5 +1,5 @@
 import { DatabaseError } from "@/api/error";
-import { MongoDBService } from "@/api/lib/infrastructure/persistent/mongo/Service";
+import { MongoDBService } from "@/api/infrastructure/persistent/mongo/Service";
 export abstract class BaseRepository {
   protected mongoDBService: MongoDBService;
 
@@ -10,7 +10,7 @@ export abstract class BaseRepository {
   protected async performDbOperation<T>(
     operation: () => Promise<T>,
     errorMsg: string,
-    throwMsg: string,
+    throwMsg: string
   ): Promise<T> {
     try {
       await this.mongoDBService.connect();
