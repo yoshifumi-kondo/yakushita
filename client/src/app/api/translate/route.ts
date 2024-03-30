@@ -2,7 +2,6 @@ import {
   FromTo,
   Language,
   Text,
-  LanguagesType,
   Original,
   TranslationConfig,
 } from "@/api/lib/domain";
@@ -16,12 +15,9 @@ export async function POST(request: Request) {
   }
   const body = await request.json();
   const result = await translate.execute(
-    new Original(new Text(body.text), new Language(LanguagesType.JAPANESE)),
+    new Original(new Text(body.text), new Language(body.from)),
     new TranslationConfig(
-      new FromTo(
-        new Language(LanguagesType.JAPANESE),
-        new Language(LanguagesType.ENGLISH)
-      )
+      new FromTo(new Language(body.from), new Language(body.to))
     ),
     userId
   );
