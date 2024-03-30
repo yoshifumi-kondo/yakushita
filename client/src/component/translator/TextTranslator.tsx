@@ -18,6 +18,7 @@ export const TextTranslator = () => {
       isFirstRender.current = false;
       return;
     }
+    const abortController = new AbortController();
     const translateText = async () => {
       if (debouncedInputText) {
         const response = await fetch("/api/translate", {
@@ -30,12 +31,18 @@ export const TextTranslator = () => {
             from: sourceLanguage,
             to: targetLanguage,
           }),
+          signal: abortController.signal,
         });
         const res = await response.json();
         setTranslatedText(res.translated);
       }
     };
     translateText();
+    return () => {
+      // Cancel the fetch request when the component is unmounted
+      // to prevent memory leaks
+      abortController.abort();
+    };
   }, [debouncedInputText, sourceLanguage, targetLanguage]);
 
   const handleInputTextChange = (text: string) => {
