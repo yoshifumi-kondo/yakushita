@@ -1,10 +1,15 @@
 "use client";
 import { useDebounce } from "@/utils/useDebounce";
 import { useEffect, useRef, useState } from "react";
+import { LanguageSelector } from "@/component/translator/LanguageSelector";
+import { InputTextArea } from "@/component/translator/InputTextArea";
+import { TranslatedText } from "@/component/translator/TranslatedText";
 
 export const TextTranslator = () => {
   const [inputText, setInputText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
+  const [sourceLanguage, setSourceLanguage] = useState<"ja" | "en">("ja");
+  const [targetLanguage, setTargetLanguage] = useState<"ja" | "en">("en");
   const isFirstRender = useRef(true);
   const debouncedInputText = useDebounce(inputText, 500);
   useEffect(() => {
@@ -20,35 +25,40 @@ export const TextTranslator = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ text: debouncedInputText }),
+          body: JSON.stringify({
+            text: debouncedInputText,
+            from: sourceLanguage,
+            to: targetLanguage,
+          }),
         });
         const res = await response.json();
         setTranslatedText(res.translated);
       }
     };
     translateText();
-  }, [debouncedInputText]);
+  }, [debouncedInputText, sourceLanguage, targetLanguage]);
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputText(e.target.value);
+  const handleInputTextChange = (text: string) => {
+    setInputText(text);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
       <div className="w-full max-w-lg">
+        <LanguageSelector
+          sourceLanguage={sourceLanguage}
+          targetLanguage={targetLanguage}
+          onChangeSource={setSourceLanguage}
+          onChangeTarget={setTargetLanguage}
+        />
         <div className="mb-4">
-          <textarea
-            className="w-full p-4 text-base text-gray-900 bg-white rounded-lg shadow border border-gray-300 focus:outline-none focus:border-blue-500"
-            rows={4}
-            placeholder="Type to translate."
-            value={inputText}
-            onChange={onChange}
+          <InputTextArea
+            inputText={inputText}
+            onChange={handleInputTextChange}
           />
         </div>
         <div className="mb-4">
-          <div className="w-full p-4 text-base text-gray-900 bg-gray-50 rounded-lg border border-gray-300">
-            {translatedText}
-          </div>
+          <TranslatedText translatedText={translatedText} />
         </div>
       </div>
     </div>
