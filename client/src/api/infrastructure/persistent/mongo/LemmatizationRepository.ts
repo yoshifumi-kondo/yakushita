@@ -9,6 +9,7 @@ import {
   Text,
   LemmatizedLemmatization,
   type LemmatizedLemmatizationList,
+  Sentence,
 } from "@/api/lib/domain";
 import { BaseRepository } from "@/api/infrastructure/persistent/mongo/BaseRepository";
 import type { ILemmatizationRepository } from "@/api/lib/repository/ILemmatizationRepository";
@@ -82,7 +83,10 @@ export class LemmatizationRepository
                 new LemmatizationStatus(status),
                 new UserId(userId),
                 new Language(language),
-                new Text(source),
+                new Sentence(
+                  new Text(source.text),
+                  new Language(source.language)
+                ),
                 domainWordList
               );
             }

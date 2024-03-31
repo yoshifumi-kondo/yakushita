@@ -1,7 +1,7 @@
 const symbol = Symbol("Text");
 
 export class Text {
-  public static MAX_LENGTH = 5000;
+  public static MAX_LENGTH = 500;
   public static [symbol] = symbol;
 
   constructor(readonly value: string) {

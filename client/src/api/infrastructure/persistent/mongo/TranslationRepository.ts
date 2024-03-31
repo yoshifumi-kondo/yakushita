@@ -12,6 +12,7 @@ import {
   UserId,
   type Translation,
   DraftTranslation,
+  Sentence,
 } from "@/api/lib/domain";
 import { TranslationId } from "@/api/lib/domain/translation/TranslationId";
 import { TranslationStatus } from "@/api/lib/domain/translation/TranslationStatus";
@@ -45,7 +46,7 @@ export class TranslationRepository
     }
 
     const {
-      original,
+      original: { sentence },
       translated,
       config: {
         fromTo: { from, to },
@@ -53,9 +54,8 @@ export class TranslationRepository
     } = translation;
     const id = new TranslationId(translation.id);
     const userId = new UserId(translation.userId);
-    const originalText = new Original(
-      new Text(original.text),
-      new Language(original.language)
+    const original = new Original(
+      new Sentence(new Text(sentence.text), new Language(sentence.language))
     );
     const config = new TranslationConfig(
       new FromTo(new Language(from), new Language(to))
@@ -63,18 +63,20 @@ export class TranslationRepository
     const status = new TranslationStatus(translation.status);
 
     if (status.isDraft()) {
-      return new DraftTranslation(id, status, userId, originalText, config);
+      return new DraftTranslation(id, status, userId, original, config);
     }
     if (status.isTranslated() && translated) {
       return new TranslatedTranslation(
         id,
         status,
         userId,
-        originalText,
+        original,
         config,
         new Translated(
-          new Text(translated.text),
-          new Language(translated.language)
+          new Sentence(
+            new Text(translated.sentence.text),
+            new Language(translated.sentence.language)
+          )
         )
       );
     }

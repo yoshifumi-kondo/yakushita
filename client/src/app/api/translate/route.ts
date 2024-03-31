@@ -5,6 +5,7 @@ import {
   Original,
   TranslationConfig,
   LanguagesType,
+  Sentence,
 } from "@/api/lib/domain";
 import { getUserIdFromSession } from "@/api/utils/getUserIdFromSession";
 import { translateWithLemmatizationAndCount } from "@/api/feature/common/usecase";
@@ -20,10 +21,14 @@ export async function POST(request: Request) {
     new TranslationConfig(
       new FromTo(new Language(body.from), new Language(body.to))
     ),
-    new Original(new Text(body.text), new Language(LanguagesType.JAPANESE)),
-    new Language(LanguagesType.ENGLISH)
+    new Original(new Sentence(new Text(body.text), new Language(body.from)))
   );
-  return Response.json({ translated: result.toJSON().translated.text });
+  const {
+    translated: {
+      sentence: { text },
+    },
+  } = result.toJSON();
+  return Response.json({ translated: text });
 }
 
 // async function translate(text: string) {

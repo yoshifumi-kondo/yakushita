@@ -7,7 +7,7 @@ export const LemmatizationList: FC<{ word: string; partOfSpeech: string }> = ({
 }) => {
   const [lemmatizationList, setLemmatizationList] = useState<
     {
-      source: string;
+      source: { text: string; language: string };
       wordList: { text: string; partOfSpeech: string; language: string }[];
       id: string;
     }[]
@@ -49,7 +49,7 @@ export const LemmatizationList: FC<{ word: string; partOfSpeech: string }> = ({
               {index + 1}
             </span>
             <span className="text-sm font-medium text-gray-700 flex-1">
-              {source}
+              {source.text}
             </span>
           </li>
         ))}

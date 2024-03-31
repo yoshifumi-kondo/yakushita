@@ -1,9 +1,5 @@
-import type { Language, Text, UserId } from "@/api/lib/domain";
+import type { Language, Sentence, UserId } from "@/api/lib/domain";
 
 export abstract class ILemmatizeAndCount {
-  abstract execute(
-    userId: UserId,
-    language: Language,
-    source: Text
-  ): Promise<void>;
+  abstract execute(userId: UserId, source: Sentence): Promise<void>;
 }

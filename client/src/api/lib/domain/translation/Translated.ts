@@ -1,14 +1,13 @@
-import type { Language, Text } from "@/api/lib/domain";
+import type { Sentence } from "@/api/lib/domain";
 
 const symbol = Symbol("Translated");
 
 export class Translated {
   public static [symbol] = symbol;
-  constructor(readonly text: Text, readonly language: Language) {}
+  constructor(readonly sentence: Sentence) {}
   toJSON() {
     return {
-      text: this.text.toJSON(),
-      language: this.language.toJSON(),
+      sentence: this.sentence.toJSON(),
     };
   }
 }

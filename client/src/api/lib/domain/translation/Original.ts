@@ -1,11 +1,11 @@
-import type { Language, Text } from "@/api/lib/domain";
+import type { Sentence } from "@/api/lib/domain";
 
 const symbol = Symbol("Original");
 
 export class Original {
-  public static readonly TEXT_MAX_LENGTH = 100;
+  public static readonly TEXT_MAX_LENGTH = 500;
   public static [symbol] = symbol;
-  constructor(readonly text: Text, readonly language: Language) {
+  constructor(readonly sentence: Sentence) {
     this.validate();
   }
   private validate() {
@@ -14,13 +14,12 @@ export class Original {
     }
   }
   private overMaxTextLength() {
-    return this.text.length > Original.TEXT_MAX_LENGTH;
+    return this.sentence.text.length > Original.TEXT_MAX_LENGTH;
   }
 
   toJSON() {
     return {
-      text: this.text.toJSON(),
-      language: this.language.toJSON(),
+      sentence: this.sentence.toJSON(),
     };
   }
 }

@@ -1,4 +1,4 @@
-import type { Language, Text, UserId, WordList } from "@/api/lib/domain";
+import type { Language, Sentence, UserId, WordList } from "@/api/lib/domain";
 import { LemmatizationId } from "@/api/lib/domain/lemmatization/LemmatizationId";
 import { LemmatizationStatus } from "@/api/lib/domain/lemmatization/LemmatizationStatus";
 
@@ -10,7 +10,7 @@ abstract class Base {
     readonly status: LemmatizationStatus,
     readonly userId: UserId,
     readonly language: Language,
-    readonly source: Text
+    readonly source: Sentence
   ) {}
 
   abstract validate(): void;
@@ -32,13 +32,13 @@ export class DraftLemmatization extends Base {
     readonly status: LemmatizationStatus,
     readonly userId: UserId,
     readonly language: Language,
-    readonly source: Text
+    readonly source: Sentence
   ) {
     super(id, status, userId, language, source);
     this.validate;
   }
 
-  static create(userId: UserId, language: Language, source: Text) {
+  static create(userId: UserId, language: Language, source: Sentence) {
     return new DraftLemmatization(
       LemmatizationId.create(),
       LemmatizationStatus.createDraft(),
@@ -64,7 +64,7 @@ export class LemmatizedLemmatization extends Base {
     readonly status: LemmatizationStatus,
     readonly userId: UserId,
     readonly language: Language,
-    readonly source: Text,
+    readonly source: Sentence,
     readonly wordList: WordList
   ) {
     super(id, status, userId, language, source);

@@ -9,8 +9,8 @@ export class TranslationConfig {
 
   matchFromTo(original: Original, translated: Translated) {
     return (
-      original.language.isSame(this.fromTo.from) &&
-      translated.language.isSame(this.fromTo.to)
+      original.sentence.language.isSame(this.fromTo.from) &&
+      translated.sentence.language.isSame(this.fromTo.to)
     );
   }
 

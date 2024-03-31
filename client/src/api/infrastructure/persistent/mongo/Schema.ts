@@ -10,6 +10,11 @@ enum MODEL_NAMES {
   WORD_USAGE = "WordUsage",
 }
 
+interface Sentence {
+  text: string;
+  language: LanguagesType;
+}
+
 export interface IUser extends Document {
   auth: {
     google: {
@@ -23,8 +28,7 @@ export interface ITranslation extends Document {
   status: TRANSLATION_TYPE;
   userId: string;
   original: {
-    text: string;
-    language: LanguagesType;
+    sentence: Sentence;
   };
   config: {
     fromTo: {
@@ -33,8 +37,7 @@ export interface ITranslation extends Document {
     };
   };
   translated?: {
-    text: string;
-    language: LanguagesType;
+    sentence: Sentence;
   };
 }
 
@@ -43,7 +46,7 @@ export interface ILemmatization extends Document {
   status: LEMMATIZATION_TYPE;
   userId: string;
   language: LanguagesType;
-  source: string;
+  source: Sentence;
   wordList?: {
     text: string;
     partOfSpeech: PartOfSpeechType;
@@ -85,18 +88,23 @@ const TranslationSchema = new mongoose.Schema({
   },
   userId: { type: String, required: true, ref: MODEL_NAMES.USER },
   original: {
-    text: { type: String, required: true },
-    language: {
-      type: String,
-      enum: Object.values(LanguagesType),
-      required: true,
+    sentence: {
+      text: { type: String, required: true },
+      language: {
+        type: String,
+        enum: Object.values(LanguagesType),
+        required: true,
+      },
     },
   },
   translated: {
-    text: { type: String },
-    language: {
-      type: String,
-      enum: Object.values(LanguagesType),
+    sentence: {
+      text: { type: String, required: true },
+      language: {
+        type: String,
+        enum: Object.values(LanguagesType),
+        required: true,
+      },
     },
   },
   config: {
@@ -147,7 +155,14 @@ const LemmatizationSchema = new mongoose.Schema({
     enum: Object.values(LanguagesType),
     required: true,
   },
-  source: { type: String, required: true },
+  source: {
+    text: { type: String, required: true },
+    language: {
+      type: String,
+      enum: Object.values(LanguagesType),
+      required: true,
+    },
+  },
 });
 
 const WordUsageSchema = new mongoose.Schema({

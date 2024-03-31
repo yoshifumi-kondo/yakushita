@@ -2,13 +2,13 @@ import type { ITranslationService } from "@/api/feature/translation/service/ITra
 
 import type { OpenAiAdapter } from "@/api/infrastructure/adapter/openai/OpenAiAdopter";
 import {
-  type Original,
   type TranslationConfig,
   Translated,
   Text,
   type DraftTranslation,
   TranslatedTranslation,
   type Translation,
+  Sentence,
 } from "@/api/lib/domain";
 import type { ITranslationRepository } from "@/api/lib/repository/ITranslationRepository";
 
@@ -20,7 +20,10 @@ export class TranslationService implements ITranslationService {
   async translate(draft: DraftTranslation) {
     const { original, config } = draft;
     try {
-      const translated = await this.generatePrompt(original, config);
+      const translated = await this.generatePrompt(
+        original.sentence.text,
+        config
+      );
       return TranslatedTranslation.create(draft, translated);
     } catch (error) {
       console.error(
@@ -33,23 +36,19 @@ export class TranslationService implements ITranslationService {
   async save(translation: Translation) {
     return await this.translationRepository.save(translation);
   }
-  private async generatePrompt(
-    originalText: Original,
-    config: TranslationConfig
-  ) {
+  private async generatePrompt(text: Text, config: TranslationConfig) {
     const {
       fromTo: { to, from },
     } = config.toJSON();
-    const prompt = this.generateTranslationPrompt(
-      from,
-      to,
-      originalText.toJSON().text
-    );
+
+    const prompt = this.generateTranslationPrompt(from, to, text.toJSON());
     const rowTranslatedText = await this.openAiService.askGptV3_5Turbo(prompt);
     if (!rowTranslatedText?.trim().length) {
       throw new Error("Translation failed: received empty response from GPT-3");
     }
-    return new Translated(new Text(rowTranslatedText), config.fromTo.to);
+    return new Translated(
+      new Sentence(new Text(rowTranslatedText), config.fromTo.to)
+    );
   }
   private generateTranslationPrompt(
     from: string,

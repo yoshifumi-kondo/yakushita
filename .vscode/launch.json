@@ -8,7 +8,8 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "timeout": 40000,
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/client"
     }
   ]
 }

@@ -6,16 +6,16 @@ import {
   type Text,
   DraftLemmatization,
   type LemmatizedLemmatization,
+  type Sentence,
 } from "@/api/lib/domain";
 
 export class Lemmatize implements ILemmatize {
   constructor(private readonly lemmatizationService: ILemmatizationService) {}
   async execute(
     userId: UserId,
-    language: Language,
-    source: Text
+    source: Sentence
   ): Promise<LemmatizedLemmatization> {
-    const draft = DraftLemmatization.create(userId, language, source);
+    const draft = DraftLemmatization.create(userId, source.language, source);
     const lemmatized = await this.lemmatizationService.lemmatize(draft);
     await this.lemmatizationService.save(lemmatized);
     return lemmatized;

@@ -1,14 +1,13 @@
 import type {
   Language,
   LemmatizedLemmatization,
-  Text,
+  Sentence,
   UserId,
 } from "@/api/lib/domain";
 
 export abstract class ILemmatize {
   abstract execute(
     userId: UserId,
-    language: Language,
-    source: Text
+    source: Sentence
   ): Promise<LemmatizedLemmatization>;
 }

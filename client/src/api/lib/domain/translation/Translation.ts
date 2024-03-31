@@ -1,6 +1,7 @@
 import type {
   Language,
   Original,
+  Sentence,
   Text,
   Translated,
   TranslationConfig,
@@ -59,7 +60,7 @@ export class DraftTranslation extends Base {
   }
 
   validate() {
-    if (!this.config.fromTo.from.isSame(this.original.language)) {
+    if (!this.config.fromTo.from.isSame(this.original.sentence.language)) {
       throw new Error("Translation config does not match original");
     }
     if (!DraftTranslation.is(this)) {
@@ -106,12 +107,12 @@ export class TranslatedTranslation extends Base {
     }
   }
 
-  getTextByLanguage(language: Language): Text {
-    if (this.original.language.isSame(language)) {
-      return this.original.text;
+  getTextByLanguage(language: Language): Sentence {
+    if (this.original.sentence.language.isSame(language)) {
+      return this.original.sentence;
     }
-    if (this.translated.language.isSame(language)) {
-      return this.translated.text;
+    if (this.translated.sentence.language.isSame(language)) {
+      return this.translated.sentence;
     }
     throw new Error(`Language ${language.toJSON()} not found in translation`);
   }
