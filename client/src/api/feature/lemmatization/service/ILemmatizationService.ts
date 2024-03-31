@@ -1,18 +1,19 @@
-import {
-  Translation,
+import type {
   Lemmatization,
   UserId,
-  SentenceList,
-  WordWithCountList,
   Word,
+  DraftLemmatization,
+  LemmatizedLemmatization,
+  LemmatizedLemmatizationList,
 } from "@/api/lib/domain";
 
 export abstract class ILemmatizationService {
-  abstract lemmatize(translation: Translation): Promise<Lemmatization>;
-  abstract save(lemmatization: Lemmatization, userId: UserId): Promise<void>;
-  abstract getTopWords(userId: UserId): Promise<WordWithCountList>;
-  abstract getSentenceListByWord(
+  abstract lemmatize(
+    draft: DraftLemmatization
+  ): Promise<LemmatizedLemmatization>;
+  abstract save(lemmatization: Lemmatization): Promise<void>;
+  abstract getAllLemmatizedByWord(
     word: Word,
     userId: UserId
-  ): Promise<SentenceList>;
+  ): Promise<LemmatizedLemmatizationList>;
 }

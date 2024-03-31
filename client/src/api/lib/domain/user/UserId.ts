@@ -4,17 +4,11 @@ const symbol = Symbol("UserId");
 
 export class UserId {
   public static [symbol] = symbol;
-  private _id: string;
-
-  constructor(id: string) {
-    this._id = id;
-  }
-
+  constructor(readonly id: string) {}
   public static create() {
     return new UserId(generateId());
   }
-
   toJSON() {
-    return this._id;
+    return this.id;
   }
 }

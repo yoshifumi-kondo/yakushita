@@ -7,20 +7,17 @@ const symbol = Symbol("Language");
 
 export class Language {
   public static [symbol] = symbol;
-  private _language: LanguagesType;
 
-  constructor(language: LanguagesType) {
-    this._language = language;
-  }
+  constructor(readonly language: LanguagesType) {}
   isEnglish() {
-    return this._language === LanguagesType.ENGLISH;
+    return this.language === LanguagesType.ENGLISH;
   }
 
   isSame(language: Language) {
-    return this._language === language._language;
+    return this.language === language.language;
   }
 
   toJSON() {
-    return this._language;
+    return this.language;
   }
 }

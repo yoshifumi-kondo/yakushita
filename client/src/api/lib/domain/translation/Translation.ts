@@ -1,53 +1,126 @@
 import type {
   Language,
   Original,
+  Sentence,
+  Text,
   Translated,
   TranslationConfig,
+  UserId,
 } from "@/api/lib/domain";
+import { TranslationId } from "@/api/lib/domain/translation/TranslationId";
+import { TranslationStatus } from "@/api/lib/domain/translation/TranslationStatus";
 
-const symbol = Symbol("Translation");
+export type Translation = DraftTranslation | TranslatedTranslation;
 
-export class Translation {
-  public static [symbol] = symbol;
-  private _original: Original;
-  private _translated: Translated;
-  private _translationConfig: TranslationConfig;
-
+abstract class Base {
   constructor(
-    originalText: Original,
-    translatedText: Translated,
-    translationConfig: TranslationConfig
+    readonly id: TranslationId,
+    readonly status: TranslationStatus,
+    readonly userId: UserId,
+    readonly original: Original,
+    readonly config: TranslationConfig
+  ) {}
+
+  abstract validate(): void;
+
+  toJSON() {
+    return {
+      id: this.id.toJSON(),
+      status: this.status.toJSON(),
+      userId: this.userId.toJSON(),
+      original: this.original.toJSON(),
+      config: this.config.toJSON(),
+    };
+  }
+}
+
+export class DraftTranslation extends Base {
+  constructor(
+    id: TranslationId,
+    status: TranslationStatus,
+    userId: UserId,
+    original: Original,
+    config: TranslationConfig
   ) {
-    this._original = originalText;
-    this._translated = translatedText;
-    this._translationConfig = translationConfig;
-    this.validate();
+    super(id, status, userId, original, config);
+    this.validate;
   }
 
-  private validate() {
-    if (
-      !this._translationConfig.matchFromTo(this._original, this._translated)
-    ) {
+  static create(userId: UserId, original: Original, config: TranslationConfig) {
+    return new DraftTranslation(
+      TranslationId.create(),
+      TranslationStatus.createDraft(),
+      userId,
+      original,
+      config
+    );
+  }
+  static is(translation: Translation): translation is DraftTranslation {
+    return translation.status.isDraft();
+  }
+
+  validate() {
+    if (!this.config.fromTo.from.isSame(this.original.sentence.language)) {
+      throw new Error("Translation config does not match original");
+    }
+    if (!DraftTranslation.is(this)) {
+      throw new Error("Status does not match");
+    }
+  }
+}
+
+export class TranslatedTranslation extends Base {
+  constructor(
+    id: TranslationId,
+    status: TranslationStatus,
+    userId: UserId,
+    original: Original,
+    config: TranslationConfig,
+    readonly translated: Translated
+  ) {
+    super(id, status, userId, original, config);
+    this.validate;
+  }
+
+  static create(draft: DraftTranslation, translated: Translated) {
+    return new TranslatedTranslation(
+      draft.id,
+      TranslationStatus.createTranslated(),
+      draft.userId,
+      draft.original,
+      draft.config,
+      translated
+    );
+  }
+  static is(translation: Translation): translation is TranslatedTranslation {
+    return translation.status.isTranslated();
+  }
+
+  validate() {
+    if (!this.config.matchFromTo(this.original, this.translated)) {
       throw new Error(
         "Translation config does not match original and translated"
       );
     }
-  }
-  getTextByLanguage(language: Language) {
-    if (this._original.language.isSame(language)) {
-      return this._original;
+    if (!TranslatedTranslation.is(this)) {
+      throw new Error("Status does not match");
     }
-    if (this._translated.language.isSame(language)) {
-      return this._translated;
+  }
+
+  getTextByLanguage(language: Language): Sentence {
+    if (this.original.sentence.language.isSame(language)) {
+      return this.original.sentence;
+    }
+    if (this.translated.sentence.language.isSame(language)) {
+      return this.translated.sentence;
     }
     throw new Error(`Language ${language.toJSON()} not found in translation`);
   }
 
   toJSON() {
     return {
-      original: this._original.toJSON(),
-      translated: this._translated.toJSON(),
-      translationConfig: this._translationConfig.toJSON(),
+      ...super.toJSON(),
+      translated: this.translated.toJSON(),
     };
   }
 }

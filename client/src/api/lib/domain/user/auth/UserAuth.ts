@@ -3,8 +3,8 @@ import type { GoogleAuth } from "@/api/lib/domain";
 const symbol = Symbol("UserAuth");
 export class UserAuth {
   public readonly [symbol]: typeof symbol = symbol;
-  private readonly google?: GoogleAuth;
-  constructor({ google }: { google?: GoogleAuth }) {
+  readonly google?: GoogleAuth;
+  constructor({ google }: { readonly google?: GoogleAuth }) {
     this.google = google;
     this.validate();
   }

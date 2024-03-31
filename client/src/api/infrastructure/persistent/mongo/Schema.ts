@@ -1,5 +1,19 @@
+import mongoose, { type Document, type Model } from "mongoose";
 import { LanguagesType, PartOfSpeechType } from "@/api/lib/domain";
-import mongoose, { Document, Model } from "mongoose";
+import { TRANSLATION_TYPE } from "@/api/lib/domain/translation/TranslationStatus";
+import { LEMMATIZATION_TYPE } from "@/api/lib/domain/lemmatization/LemmatizationStatus";
+
+enum MODEL_NAMES {
+  USER = "User",
+  TRANSLATION = "Translation",
+  LEMMATIZATION = "Lemmatization",
+  WORD_USAGE = "WordUsage",
+}
+
+interface Sentence {
+  text: string;
+  language: LanguagesType;
+}
 
 export interface IUser extends Document {
   id: string;
@@ -10,47 +24,131 @@ export interface IUser extends Document {
   };
 }
 
-export interface ISentence extends Document {
-  content: string;
-  words: mongoose.Types.ObjectId[];
-  language: LanguagesType;
+export interface ITranslation extends Document {
+  id: string;
+  status: TRANSLATION_TYPE;
   userId: string;
+  original: {
+    sentence: Sentence;
+  };
+  config: {
+    fromTo: {
+      from: LanguagesType;
+      to: LanguagesType;
+    };
+  };
+  translated?: {
+    sentence: Sentence;
+  };
 }
 
-export interface IWord extends Document {
-  word: string;
-  count: number;
-  sentences: mongoose.Types.ObjectId[];
-  language: LanguagesType;
+export interface ILemmatization extends Document {
+  id: string;
+  status: LEMMATIZATION_TYPE;
   userId: string;
-  partOfSpeech: PartOfSpeechType;
+  language: LanguagesType;
+  source: Sentence;
+  wordList?: {
+    text: string;
+    partOfSpeech: PartOfSpeechType;
+    language: LanguagesType;
+  }[];
+}
+
+export interface IWordUsage extends Document {
+  id: string;
+  userId: string;
+  word: {
+    text: string;
+    partOfSpeech: PartOfSpeechType;
+    language: LanguagesType;
+  };
+  count: number;
+  masteryPercentage: number;
+  exclusion: boolean;
 }
 
 const UserSchema = new mongoose.Schema({
+  auth: {
+    google: {
+      id: { type: String, required: true },
+    },
+  },
+});
+
+const TranslationSchema = new mongoose.Schema({
   id: {
     type: String,
     required: true,
     unique: true,
   },
-  auth: {
-    google: {
-      id: {
+  status: {
+    type: String,
+    enum: Object.values(TRANSLATION_TYPE),
+    required: true,
+  },
+  userId: { type: String, required: true, ref: MODEL_NAMES.USER },
+  original: {
+    sentence: {
+      text: { type: String, required: true },
+      language: {
         type: String,
+        enum: Object.values(LanguagesType),
+        required: true,
+      },
+    },
+  },
+  translated: {
+    sentence: {
+      text: { type: String, required: true },
+      language: {
+        type: String,
+        enum: Object.values(LanguagesType),
+        required: true,
+      },
+    },
+  },
+  config: {
+    fromTo: {
+      from: {
+        type: String,
+        enum: Object.values(LanguagesType),
+        required: true,
+      },
+      to: {
+        type: String,
+        enum: Object.values(LanguagesType),
         required: true,
       },
     },
   },
 });
 
-const SentenceSchema = new mongoose.Schema({
-  content: {
+const LemmatizationSchema = new mongoose.Schema({
+  id: {
     type: String,
     required: true,
+    unique: true,
   },
-  words: [
+  status: {
+    type: String,
+    enum: Object.values(LEMMATIZATION_TYPE),
+    required: true,
+  },
+  userId: { type: String, required: true, ref: MODEL_NAMES.USER },
+  wordList: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Word",
+      text: { type: String, required: true },
+      partOfSpeech: {
+        type: String,
+        enum: Object.values(PartOfSpeechType),
+        required: true,
+      },
+      language: {
+        type: String,
+        enum: Object.values(LanguagesType),
+        required: true,
+      },
     },
   ],
   language: {
@@ -58,53 +156,66 @@ const SentenceSchema = new mongoose.Schema({
     enum: Object.values(LanguagesType),
     required: true,
   },
-  userId: {
-    type: String,
-    required: true,
-    ref: "User",
+  source: {
+    text: { type: String, required: true },
+    language: {
+      type: String,
+      enum: Object.values(LanguagesType),
+      required: true,
+    },
   },
 });
 
-const WordSchema = new mongoose.Schema({
-  word: {
+const WordUsageSchema = new mongoose.Schema({
+  id: {
     type: String,
     required: true,
-  },
-  count: {
-    type: Number,
-    default: 0,
-  },
-  sentences: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Sentence",
-    },
-  ],
-  language: {
-    type: String,
-    enum: Object.values(LanguagesType),
-    required: true,
+    unique: true,
   },
   userId: {
     type: String,
     required: true,
-    ref: "User",
+    ref: MODEL_NAMES.USER,
   },
-  partOfSpeech: {
-    type: String,
-    enum: Object.values(PartOfSpeechType),
+  word: {
+    text: { type: String, required: true },
+    partOfSpeech: {
+      type: String,
+      enum: Object.values(PartOfSpeechType),
+      required: true,
+    },
+    language: {
+      type: String,
+      enum: Object.values(LanguagesType),
+      required: true,
+    },
+  },
+  count: {
+    type: Number,
+    required: true,
+  },
+  masteryPercentage: {
+    type: Number,
+    required: true,
+  },
+  exclusion: {
+    type: Boolean,
     required: true,
   },
 });
 
 export const UserModel: Model<IUser> =
   (mongoose.models.User as Model<IUser>) ||
-  mongoose.model<IUser>("User", UserSchema);
-
-export const SentenceModel: Model<ISentence> =
-  (mongoose.models.Sentence as Model<ISentence>) ||
-  mongoose.model<ISentence>("Sentence", SentenceSchema);
-
-export const WordModel: Model<IWord> =
-  (mongoose.models.Word as Model<IWord>) ||
-  mongoose.model<IWord>("Word", WordSchema);
+  mongoose.model<IUser>(MODEL_NAMES.USER, UserSchema);
+export const TranslationModel: Model<ITranslation> =
+  (mongoose.models.Translation as Model<ITranslation>) ||
+  mongoose.model<ITranslation>(MODEL_NAMES.TRANSLATION, TranslationSchema);
+export const LemmatizationModel: Model<ILemmatization> =
+  (mongoose.models.Lemmatization as Model<ILemmatization>) ||
+  mongoose.model<ILemmatization>(
+    MODEL_NAMES.LEMMATIZATION,
+    LemmatizationSchema
+  );
+export const WordUsageModel: Model<IWordUsage> =
+  (mongoose.models.WordUsage as Model<IWordUsage>) ||
+  mongoose.model<IWordUsage>(MODEL_NAMES.WORD_USAGE, WordUsageSchema);

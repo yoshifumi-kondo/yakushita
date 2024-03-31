@@ -1,8 +1,8 @@
-import { UserAuth, User } from "@/api/lib/domain";
-import { ISignInOrSignUp as ISignInOrSignUp } from "@/api/feature/user/usecase/auth/signInOrSignup/ISingInOrSignUp";
-import { IUserService } from "@/api/feature/user/service/IUserService";
-import { ISignIn } from "@/api/feature/user/usecase/auth/signin/ISignIn";
-import { ISignUp } from "@/api/feature/user/usecase/auth/signup/ISignUp";
+import type { UserAuth, User } from "@/api/lib/domain";
+import type { ISignInOrSignUp } from "@/api/feature/user/usecase/auth/signInOrSignup/ISingInOrSignUp";
+import type { IUserService } from "@/api/feature/user/service/IUserService";
+import type { ISignIn } from "@/api/feature/user/usecase/auth/signin/ISignIn";
+import type { ISignUp } from "@/api/feature/user/usecase/auth/signup/ISignUp";
 
 export class SignInOrSignUp implements ISignInOrSignUp {
   constructor(

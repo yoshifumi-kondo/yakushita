@@ -1,12 +1,11 @@
 import {
   Language,
   LanguagesType,
-  Original,
   Text,
-  Translated,
   Word,
   WordList,
   Lemmatization,
+  type Sentence,
 } from "@/api/lib/domain";
 import {
   PartOfSpeech,
@@ -35,48 +34,20 @@ type responseData = {
 };
 
 export class LemmatizeAdopter {
-  async lemmatizeForEnglish(
-    target: Translated | Original
-  ): Promise<Lemmatization> {
-    if (!target.language.isSame(new Language(LanguagesType.ENGLISH))) {
-      console.log(
-        `Lemmatization failed: target language is not English: ${target.language}`
-      );
-      throw new Error("Lemmatization failed: target language is not English");
+  async lemmatize(sentence: Sentence, language: Language): Promise<WordList> {
+    if (!this.isMatchedLanguage(sentence, language)) {
+      throw new Error("Language is not matched");
     }
 
-    const data = await this._lemmatizeEnglishText(target.text.toJSON());
-    if (!data) {
-      throw new Error(
-        "Lemmatization failed: received empty response from the server"
-      );
+    if (language.isEnglish()) {
+      return await this._forEnglish(sentence);
     }
-    const { tokens_with_POS, original } = data;
-
-    if (!tokens_with_POS || tokens_with_POS.length === 0) {
-      throw new Error("Lemmatization failed: no tokens found in the response");
-    }
-
-    const wordList = new WordList(
-      tokens_with_POS.map(
-        (token) =>
-          new Word(
-            new Text(token.lemma),
-            new Language(LanguagesType.ENGLISH),
-            this.convertLemmaPOSTagToPartOfSpeech(token.lemma_POS)
-          )
-      ),
-      new Language(LanguagesType.ENGLISH)
-    );
-
-    return new Lemmatization(
-      wordList,
-      new Language(LanguagesType.ENGLISH),
-      new Text(original)
-    );
+    throw new Error("Not implemented");
   }
-
-  private async _lemmatizeEnglishText(text: string) {
+  private isMatchedLanguage(sentence: Sentence, language: Language): boolean {
+    return sentence.language.isSame(language);
+  }
+  private async _forEnglish(sentence: Sentence): Promise<WordList> {
     try {
       const response: Response = await fetch(
         `${getEnvValue(ENV_KEY.ENGLISH_LEMMATIZER_URL)}/api/lemmatize`,
@@ -85,11 +56,32 @@ export class LemmatizeAdopter {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ text }),
+          body: JSON.stringify({ text: sentence.text.toJSON() }),
         }
       );
       const data: responseData | null = await response.json();
-      return data;
+      if (!data) {
+        throw new Error(
+          "Lemmatization failed: received empty response from the server"
+        );
+      }
+      const { tokens_with_POS } = data;
+
+      if (!tokens_with_POS || tokens_with_POS.length === 0) {
+        throw new Error(
+          "Lemmatization failed: no tokens found in the response"
+        );
+      }
+      return new WordList(
+        tokens_with_POS.map(
+          (token) =>
+            new Word(
+              new Text(token.lemma),
+              new Language(LanguagesType.ENGLISH),
+              this.convertLemmaPOSTagToPartOfSpeech(token.lemma_POS)
+            )
+        )
+      );
     } catch (error) {
       throw new Error(`Failed to lemmatize text: ${error}`);
     }

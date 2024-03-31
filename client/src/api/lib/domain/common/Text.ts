@@ -1,17 +1,15 @@
 const symbol = Symbol("Text");
 
 export class Text {
-  public static MAX_LENGTH = 5000;
+  public static MAX_LENGTH = 500;
   public static [symbol] = symbol;
-  private _value: string;
 
-  constructor(value: string) {
-    this._value = value;
+  constructor(readonly value: string) {
     this.validate();
   }
 
   private validate() {
-    if (this._value.length > Text.MAX_LENGTH) {
+    if (this.value.length > Text.MAX_LENGTH) {
       throw new Error("Text is too long");
     }
     if (this.isEmpty()) {
@@ -20,14 +18,17 @@ export class Text {
   }
 
   get length() {
-    return this._value.length;
+    return this.value.length;
   }
 
   private isEmpty() {
-    return this._value.trim() === "";
+    return this.value.trim() === "";
+  }
+  isSame(text: Text) {
+    return this.value === text.value;
   }
 
   toJSON() {
-    return this._value;
+    return this.value;
   }
 }
