@@ -2,9 +2,9 @@ import {
   FromTo,
   Language,
   Text,
-  LanguagesType,
   Original,
   TranslationConfig,
+  LanguagesType,
 } from "@/api/lib/domain";
 import { getUserIdFromSession } from "@/api/utils/getUserIdFromSession";
 import { translateWithLemmatizationAndCount } from "@/api/feature/common/usecase";
@@ -18,10 +18,7 @@ export async function POST(request: Request) {
   const result = await translateWithLemmatizationAndCount.execute(
     userId,
     new TranslationConfig(
-      new FromTo(
-        new Language(LanguagesType.JAPANESE),
-        new Language(LanguagesType.ENGLISH)
-      )
+      new FromTo(new Language(body.from), new Language(body.to))
     ),
     new Original(new Text(body.text), new Language(LanguagesType.JAPANESE)),
     new Language(LanguagesType.ENGLISH)
