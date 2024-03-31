@@ -15,42 +15,19 @@ export class LemmatizationService implements ILemmatizationService {
     private lemmatizationRepository: ILemmatizationRepository
   ) {}
   async lemmatize(draft: DraftLemmatization) {
-    try {
-      const wordList = await this.lemmatizeAdapter.lemmatize(
-        draft.source,
-        draft.language
-      );
-      return LemmatizedLemmatization.create(draft, wordList);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(`Failed to lemmatize text: ${error.message}`);
-      }
-      throw error;
-    }
+    const wordList = await this.lemmatizeAdapter.lemmatize(
+      draft.source,
+      draft.language
+    );
+    return LemmatizedLemmatization.create(draft, wordList);
   }
   async save(lemmatization: Lemmatization) {
-    try {
-      await this.lemmatizationRepository.save(lemmatization);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(`Failed to save lemmatization: ${error.message}`);
-      }
-      throw error;
-    }
+    await this.lemmatizationRepository.save(lemmatization);
   }
   async getAllLemmatizedByWord(word: Word, userId: UserId) {
-    try {
-      return await this.lemmatizationRepository.getAllLemmatizedByWord(
-        word,
-        userId
-      );
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(
-          `Failed to get all lemmatized by word: ${error.message}`
-        );
-      }
-      throw error;
-    }
+    return await this.lemmatizationRepository.getAllLemmatizedByWord(
+      word,
+      userId
+    );
   }
 }
