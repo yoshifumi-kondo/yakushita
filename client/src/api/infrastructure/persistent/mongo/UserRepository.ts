@@ -1,20 +1,19 @@
 import { GoogleAuth, User, UserAuth, UserId } from "@/api/lib/domain";
 import { GoogleAuthId } from "@/api/lib/domain/user/auth/GoogleAuthId";
 import { BaseRepository } from "@/api/infrastructure/persistent/mongo/BaseRepository";
-import { UserModel } from "@/api/infrastructure/persistent/mongo/Schema";
-import { IUserRepository } from "@/api/lib/repository/IUserRepository";
+import type { IUserRepository } from "@/api/lib/repository/IUserRepository";
+import type { UserModel } from "@/api/infrastructure/persistent/mongo/Schema";
 
 export class UserRepository extends BaseRepository implements IUserRepository {
-  private readonly MongooseUserModel;
-  constructor() {
+  constructor(private readonly model: typeof UserModel) {
     super();
-    this.MongooseUserModel = UserModel;
   }
 
   async createUser(user: User): Promise<void> {
     await this.performDbOperation(
       async () => {
-        const newUser = new this.MongooseUserModel(user.toJSON());
+        const json = user.toJSON();
+        const newUser = new this.model(json);
         await newUser.save();
       },
       "Error creating user:",
@@ -25,9 +24,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
   async getUserById(userId: UserId): Promise<User | null> {
     return await this.performDbOperation(
       async () => {
-        const userDoc = await this.MongooseUserModel.findById(
-          userId.toJSON()
-        ).exec();
+        const userDoc = await this.model.findById(userId.toJSON()).exec();
         return this.convertToUser(userDoc);
       },
       "Error getting user by ID:",
@@ -39,9 +36,11 @@ export class UserRepository extends BaseRepository implements IUserRepository {
     return await this.performDbOperation(
       async () => {
         const { google } = auth.toJSON();
-        const userDoc = await this.MongooseUserModel.findOne({
-          "auth.google.id": google?.id,
-        }).exec();
+        const userDoc = await this.model
+          .findOne({
+            "auth.google.id": google?.id,
+          })
+          .exec();
         return this.convertToUser(userDoc);
       },
       "Error getting user by auth:",
@@ -52,7 +51,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
   async deleteUser(id: UserId): Promise<void> {
     await this.performDbOperation(
       async () => {
-        await this.MongooseUserModel.findByIdAndDelete(id.toJSON()).exec();
+        await this.model.findByIdAndDelete(id.toJSON()).exec();
       },
       "Error deleting user:",
       "Failed to delete user"

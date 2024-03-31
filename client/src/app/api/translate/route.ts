@@ -6,8 +6,8 @@ import {
   Original,
   TranslationConfig,
 } from "@/api/lib/domain";
-import { translate } from "@/api/feature/translation/usecase";
 import { getUserIdFromSession } from "@/api/utils/getUserIdFromSession";
+import { translateWithLemmatizationAndCount } from "@/api/feature/common/usecase";
 
 export async function POST(request: Request) {
   const userId = await getUserIdFromSession(request);
@@ -15,15 +15,16 @@ export async function POST(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
   const body = await request.json();
-  const result = await translate.execute(
-    new Original(new Text(body.text), new Language(LanguagesType.JAPANESE)),
+  const result = await translateWithLemmatizationAndCount.execute(
+    userId,
     new TranslationConfig(
       new FromTo(
         new Language(LanguagesType.JAPANESE),
         new Language(LanguagesType.ENGLISH)
       )
     ),
-    userId
+    new Original(new Text(body.text), new Language(LanguagesType.JAPANESE)),
+    new Language(LanguagesType.ENGLISH)
   );
   return Response.json({ translated: result.toJSON().translated.text });
 }

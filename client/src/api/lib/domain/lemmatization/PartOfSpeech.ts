@@ -7,13 +7,9 @@ export enum PartOfSpeechType {
 }
 export class PartOfSpeech {
   public static [symbol]: typeof symbol = symbol;
-  private _partOfSpeech: PartOfSpeechType;
 
-  constructor(partOfSpeech: PartOfSpeechType) {
-    this._partOfSpeech = partOfSpeech;
-  }
-
-  static fromString(partOfSpeechString: string): PartOfSpeech | null {
+  constructor(readonly partOfSpeech: PartOfSpeechType) {}
+  static fromString(partOfSpeechString: string): PartOfSpeech {
     switch (partOfSpeechString) {
       case PartOfSpeechType.NOUN:
         return new PartOfSpeech(PartOfSpeechType.NOUN);
@@ -24,11 +20,13 @@ export class PartOfSpeech {
       case PartOfSpeechType.ADVERB:
         return new PartOfSpeech(PartOfSpeechType.ADVERB);
       default:
-        return null;
+        throw new Error(`Invalid part of speech: ${partOfSpeechString}`);
     }
   }
-
+  isSame(partOfSpeech: PartOfSpeech) {
+    return this.partOfSpeech === partOfSpeech.partOfSpeech;
+  }
   toJSON() {
-    return this._partOfSpeech;
+    return this.partOfSpeech;
   }
 }

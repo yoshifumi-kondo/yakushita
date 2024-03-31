@@ -1,14 +1,15 @@
-import {
+import type {
   Original,
   TranslationConfig,
   UserId,
   Translation,
+  TranslatedTranslation,
 } from "@/api/lib/domain";
 
 export interface ITranslate {
   execute(
+    userId: UserId,
     original: Original,
-    config: TranslationConfig,
-    userId: UserId
-  ): Promise<Translation>;
+    config: TranslationConfig
+  ): Promise<TranslatedTranslation>;
 }

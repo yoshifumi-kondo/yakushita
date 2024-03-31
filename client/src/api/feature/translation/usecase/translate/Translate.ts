@@ -1,36 +1,23 @@
 import {
-  Original,
-  Translation,
-  TranslationConfig,
-  UserId,
+  DraftTranslation,
+  type Original,
+  type TranslatedTranslation,
+  type TranslationConfig,
+  type UserId,
 } from "@/api/lib/domain";
-import { ITranslate } from "@/api/feature/translation/usecase/translate/ITranslate";
-import { ITranslationService } from "@/api/feature/translation/service/ITranslationService";
-import { ILemmatizationService } from "@/api/feature/lemmatization/service/ILemmatizationService";
+import type { ITranslate } from "@/api/feature/translation/usecase/translate/ITranslate";
+import type { ITranslationService } from "@/api/feature/translation/service/ITranslationService";
 
 export class Translate implements ITranslate {
-  private readonly lemmatizeService: ILemmatizationService;
-  private readonly translationService: ITranslationService;
-
-  constructor(
-    lemmatizeService: ILemmatizationService,
-    translationService: ITranslationService
-  ) {
-    this.lemmatizeService = lemmatizeService;
-    this.translationService = translationService;
-  }
-
+  constructor(private readonly translationService: ITranslationService) {}
   async execute(
+    userId: UserId,
     original: Original,
-    config: TranslationConfig,
-    userId: UserId
-  ): Promise<Translation> {
-    const translation = await this.translationService.translate(
-      original,
-      config
-    );
-    const lemmatize = await this.lemmatizeService.lemmatize(translation);
-    await this.lemmatizeService.save(lemmatize, userId);
-    return translation;
+    config: TranslationConfig
+  ): Promise<TranslatedTranslation> {
+    const draft = DraftTranslation.create(userId, original, config);
+    const translated = await this.translationService.translate(draft);
+    await this.translationService.save(translated);
+    return translated;
   }
 }

@@ -3,20 +3,9 @@ import type { Language, Text } from "@/api/lib/domain";
 const symbol = Symbol("Original");
 
 export class Original {
-  public static readonly _TEXT_MAX_LENGTH = 100;
+  public static readonly TEXT_MAX_LENGTH = 100;
   public static [symbol] = symbol;
-  private _text: Text;
-  private _language: Language;
-  get language() {
-    return this._language;
-  }
-  get text() {
-    return this._text;
-  }
-
-  constructor(text: Text, language: Language) {
-    this._text = text;
-    this._language = language;
+  constructor(readonly text: Text, readonly language: Language) {
     this.validate();
   }
   private validate() {
@@ -25,13 +14,13 @@ export class Original {
     }
   }
   private overMaxTextLength() {
-    return this._text.length > Original._TEXT_MAX_LENGTH;
+    return this.text.length > Original.TEXT_MAX_LENGTH;
   }
 
   toJSON() {
     return {
-      text: this._text.toJSON(),
-      language: this._language.toJSON(),
+      text: this.text.toJSON(),
+      language: this.language.toJSON(),
     };
   }
 }

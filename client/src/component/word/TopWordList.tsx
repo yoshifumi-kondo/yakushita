@@ -1,5 +1,5 @@
 "use client";
-import { SentenceList } from "@/component/word/SentecneList";
+import { LemmatizationList } from "@/component/word/LemmatizationList";
 import { useEffect, useState } from "react";
 
 export const TopWordList = () => {
@@ -12,7 +12,7 @@ export const TopWordList = () => {
 
   useEffect(() => {
     const fetchTopWords = async () => {
-      const response = await fetch("/api/word");
+      const response = await fetch("/api/word-usage/top-used-list");
       const res = await response.json();
       setTopWords(res);
     };
@@ -74,7 +74,7 @@ export const TopWordList = () => {
           onMouseEnter={handleSentenceListHover}
           onMouseLeave={handleSentenceListLeave}
         >
-          <SentenceList
+          <LemmatizationList
             word={selectedWord.text}
             partOfSpeech={selectedWord.partOfSpeech}
           />
