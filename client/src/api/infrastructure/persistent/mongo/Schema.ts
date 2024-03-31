@@ -16,6 +16,7 @@ interface Sentence {
 }
 
 export interface IUser extends Document {
+  id: string;
   auth: {
     google: {
       id: string;
