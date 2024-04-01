@@ -4,6 +4,7 @@ import {
   type DraftLemmatization,
   LemmatizedLemmatization,
   type Word,
+  type LemmatizationId,
 } from "@/api/lib/domain";
 import type { LemmatizeAdopter } from "@/api/infrastructure/adapter/lemmatize/LemmatizeAdopter";
 import type { ILemmatizationRepository } from "@/api/lib/repository/ILemmatizationRepository";
@@ -24,10 +25,16 @@ export class LemmatizationService implements ILemmatizationService {
   async save(lemmatization: Lemmatization) {
     await this.lemmatizationRepository.save(lemmatization);
   }
+  async update(lemmatization: Lemmatization) {
+    await this.lemmatizationRepository.update(lemmatization);
+  }
   async getAllLemmatizedByWord(word: Word, userId: UserId) {
     return await this.lemmatizationRepository.getAllLemmatizedByWord(
       word,
       userId
     );
+  }
+  async getDraftById(lemmatizationId: LemmatizationId) {
+    return await this.lemmatizationRepository.getDraftById(lemmatizationId);
   }
 }

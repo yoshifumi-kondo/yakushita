@@ -39,6 +39,16 @@ export class LemmatizationRepository
       "Failed to save lemmatization"
     );
   }
+  async update(lemmatization: Lemmatization): Promise<void> {
+    return await this.performDbOperation(
+      async () => {
+        const json = lemmatization.toJSON();
+        await this.model.updateOne({ id: json.id }, json);
+      },
+      "Error updating lemmatization:",
+      "Failed to update lemmatization"
+    );
+  }
 
   async getAllLemmatizedByWord(
     word: Word,
@@ -92,6 +102,48 @@ export class LemmatizationRepository
             }
           )
         ).lemmatized;
+      },
+      "Error getting lemmatization:",
+      "Failed to get lemmatization"
+    );
+  }
+  async getDraftById(
+    lemmatizationId: LemmatizationId
+  ): Promise<LemmatizedLemmatization> {
+    return await this.performDbOperation(
+      async () => {
+        const lemmatization = await this.model.findOne({
+          id: lemmatizationId.toJSON(),
+          status: LEMMATIZATION_TYPE.DRAFT,
+        });
+        if (!lemmatization) {
+          throw new Error("Lemmatization not found");
+        }
+        const { id, userId, wordList, language, source, status } =
+          lemmatization;
+        if (status !== LEMMATIZATION_TYPE.DRAFT) {
+          throw new Error("Lemmatization is not a draft");
+        }
+        const domainWordList = wordList
+          ? new WordList(
+              wordList.map(
+                ({ text, language, partOfSpeech }) =>
+                  new Word(
+                    new Text(text),
+                    new Language(language),
+                    new PartOfSpeech(partOfSpeech)
+                  )
+              )
+            )
+          : WordList.createEmpty();
+        return new LemmatizedLemmatization(
+          new LemmatizationId(id),
+          new LemmatizationStatus(status),
+          new UserId(userId),
+          new Language(language),
+          new Sentence(new Text(source.text), new Language(source.language)),
+          domainWordList
+        );
       },
       "Error getting lemmatization:",
       "Failed to get lemmatization"

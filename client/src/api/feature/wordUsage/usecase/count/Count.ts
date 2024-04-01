@@ -1,7 +1,7 @@
 import type { IWordUsageService } from "@/api/feature/wordUsage/service/IWordUsageService";
 import type { ICountUpAll } from "@/api/feature/wordUsage/usecase/countUpAll/ICountUpAll";
 import type { ICreateAll } from "@/api/feature/wordUsage/usecase/createAll/ICreateAll";
-import type { ICountByWordList } from "@/api/feature/wordUsage/usecase/countByWordList/ICountByWordList";
+import type { ICount } from "@/api/feature/wordUsage/usecase/count/ICount";
 import {
   WordUsageList,
   type UserId,
@@ -9,7 +9,7 @@ import {
   WordUsage,
 } from "@/api/lib/domain";
 
-export class CountByWordList implements ICountByWordList {
+export class CountByWordList implements ICount {
   constructor(
     readonly wordUsageService: IWordUsageService,
     readonly createAll: ICreateAll,

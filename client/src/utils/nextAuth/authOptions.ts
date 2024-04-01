@@ -1,4 +1,4 @@
-import { AuthOptions } from "next-auth";
+import type { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 import { UserAuth, GoogleAuth } from "@/api/lib/domain";
