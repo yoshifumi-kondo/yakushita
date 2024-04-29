@@ -12,7 +12,9 @@ import {
   PartOfSpeechType,
 } from "@/api/lib/domain/lemmatization/PartOfSpeech";
 
-describe("LemmatizeAdopter", () => {
+// This test does communicate with the server, so it's an integration test.
+// Should be skipped in the unit test run.
+describe.skip("LemmatizeAdopter", () => {
   let lemmatizeAdopter: LemmatizeAdopter;
 
   beforeEach(() => {
