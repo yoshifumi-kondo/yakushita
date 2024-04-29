@@ -4,7 +4,6 @@ import {
   Text,
   Word,
   WordList,
-  Lemmatization,
   type Sentence,
 } from "@/api/lib/domain";
 import {

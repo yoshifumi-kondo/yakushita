@@ -5,8 +5,7 @@ import {
   Text,
   Language,
   LanguagesType,
-  Translated,
-  Lemmatization,
+  Sentence,
 } from "@/api/lib/domain";
 import {
   PartOfSpeech,
@@ -21,92 +20,92 @@ describe("LemmatizeAdopter", () => {
   });
 
   it("should lemmatize English text correctly", async () => {
-    const target = new Translated(
-      new Text("The man is running"),
+    const expected = new WordList([
+      new Word(
+        new Text("man"),
+        new Language(LanguagesType.ENGLISH),
+        new PartOfSpeech(PartOfSpeechType.NOUN)
+      ),
+      new Word(
+        new Text("run"),
+        new Language(LanguagesType.ENGLISH),
+        new PartOfSpeech(PartOfSpeechType.VERB)
+      ),
+    ]);
+
+    const result = await lemmatizeAdopter.lemmatize(
+      new Sentence(
+        new Text("This man is running"),
+        new Language(LanguagesType.ENGLISH)
+      ),
       new Language(LanguagesType.ENGLISH)
     );
-    const expectedWordList = new WordList(
-      [
-        new Word(
-          new Text("man"),
-          new Language(LanguagesType.ENGLISH),
-          new PartOfSpeech(PartOfSpeechType.NOUN)
-        ),
-        new Word(
-          new Text("run"),
-          new Language(LanguagesType.ENGLISH),
-          new PartOfSpeech(PartOfSpeechType.VERB)
-        ),
-      ],
-      new Language(LanguagesType.ENGLISH)
-    );
-    const exceptedLemmatization = new Lemmatization(
-      expectedWordList,
-      new Language(LanguagesType.ENGLISH),
-      new Text("The man is running")
-    );
-    const result = await lemmatizeAdopter.lemmatizeForEnglish(target);
-    expect(result).toEqual(exceptedLemmatization);
+
+    expect(result).toEqual(expected);
   });
   it("should throw an error if target text is shorter than 2 characters", async () => {
-    const target = new Translated(
-      new Text("a"),
-      new Language(LanguagesType.ENGLISH)
-    );
-    expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
-      new Error("Lemmatization failed: no tokens found in the response")
+    expect(
+      lemmatizeAdopter.lemmatize(
+        new Sentence(new Text("a"), new Language(LanguagesType.ENGLISH)),
+        new Language(LanguagesType.ENGLISH)
+      )
+    ).rejects.toThrow(
+      new Error(
+        "Failed to lemmatize text: Error: Lemmatization failed: no tokens found in the response"
+      )
     );
   });
 
   it("should throw an error if target language is not English", async () => {
-    const target = new Translated(
-      new Text("Translated text"),
-      new Language(LanguagesType.JAPANESE)
-    );
-    await expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
-      new Error("Lemmatization failed: target language is not English")
-    );
+    await expect(
+      lemmatizeAdopter.lemmatize(
+        new Sentence(
+          new Text("Translated text"),
+          new Language(LanguagesType.JAPANESE)
+        ),
+        new Language(LanguagesType.JAPANESE)
+      )
+    ).rejects.toThrow(new Error("Not implemented"));
   });
 
   it("should throw an error if no tokens are found in the response", async () => {
-    const target = new Translated(
-      new Text("Translated text"),
-      new Language(LanguagesType.ENGLISH)
-    );
-
     const fetchMock = jest.spyOn(global, "fetch");
     fetchMock.mockImplementationOnce(() =>
       Promise.resolve({
         json: () => Promise.resolve(null),
       } as Response)
     );
-    await expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
+    await expect(
+      lemmatizeAdopter.lemmatize(
+        new Sentence(
+          new Text("Translated text"),
+          new Language(LanguagesType.ENGLISH)
+        ),
+        new Language(LanguagesType.ENGLISH)
+      )
+    ).rejects.toThrow(
       "Lemmatization failed: received empty response from the server"
     );
   });
 
   it("should throw an error if the server response is empty", async () => {
-    const target = new Translated(
-      new Text("test"),
-      new Language(LanguagesType.ENGLISH)
-    );
     const fetchMock = jest.spyOn(global, "fetch");
     fetchMock.mockImplementationOnce(() =>
       Promise.resolve({
         json: () => Promise.resolve([]),
       } as Response)
     );
-    await expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
-      "Lemmatization failed: no tokens found in the response"
+    await expect(
+      lemmatizeAdopter.lemmatize(
+        new Sentence(new Text("test"), new Language(LanguagesType.ENGLISH)),
+        new Language(LanguagesType.ENGLISH)
+      )
+    ).rejects.toThrow(
+      "Failed to lemmatize text: Error: Lemmatization failed: no tokens found in the response"
     );
   });
 
   it("should throw an error for unknown lemma POS tag", async () => {
-    const target = new Translated(
-      new Text("Translated text"),
-      new Language(LanguagesType.ENGLISH)
-    );
-
     const fetchMock = jest.spyOn(global, "fetch");
     fetchMock.mockImplementationOnce(() =>
       Promise.resolve({
@@ -121,8 +120,14 @@ describe("LemmatizeAdopter", () => {
           }),
       } as Response)
     );
-    await expect(lemmatizeAdopter.lemmatizeForEnglish(target)).rejects.toThrow(
-      "Unknown lemma POS tag: UNKNOWN"
-    );
+    await expect(
+      lemmatizeAdopter.lemmatize(
+        new Sentence(
+          new Text("Translated text"),
+          new Language(LanguagesType.ENGLISH)
+        ),
+        new Language(LanguagesType.ENGLISH)
+      )
+    ).rejects.toThrow("Unknown lemma POS tag: UNKNOWN");
   });
 });
